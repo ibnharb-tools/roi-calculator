@@ -615,6 +615,8 @@ def flags(c: dict[str, Any], cases: dict[str, Any], mc: dict[str, Any] | None) -
             add("serious", f"Time-and-materials trap: {fmt_money(cons['y1_rev_risk'])} to {fmt_money(cases['optimistic']['y1_rev_risk'])} of billed revenue disappears in year one as billed hours shrink. Lead with fixed-fee margin, capacity to take more work, fewer errors and review cycles, and speed, not hours cut.")
         else:
             add("warning", "Client bills hourly. Confirm what share of this task's hours are billed to their clients; enter it, or the revenue at risk is missing.")
+    if c["pathway"] == "billable" and c["billing_model"] == "internal":
+        add("serious", "Freed hours are counted as billable work, but this work is marked as internal and not billed. Pick a hire, overtime or capacity instead, or change how the work is billed.", "client")
     if c["pathway"] == "capacity":
         add("info", "Freed hours are counted as capacity, not cash. Say it in hours. Cash only if they remove overtime, defer a hire, or become billable work.", "client")
     if c["convert_pct"][1] > 75 and c["pathway"] != "capacity":
@@ -672,6 +674,10 @@ def strip_rows(res: dict[str, Any], keep_rows: bool) -> dict[str, Any]:
             "cum_cash": [row["cum_cash"] for row in res["rows"]],
             "cum_all": [row["cum_all"] for row in res["rows"]],
             "hours": [row["hours"] for row in res["rows"]],
+            "benefit_cash": [row["hard_benefit"] for row in res["rows"]],
+            "benefit_all": [row["hard_benefit"] + row["soft_benefit"] for row in res["rows"]],
+            "one_time": [row["one_time"] for row in res["rows"]],
+            "recurring": [row["care"] + row["running"] + row["owner"] + row["rev_risk"] for row in res["rows"]],
         }
     r.pop("rows", None)
     return r

@@ -14,32 +14,17 @@ python roi_calculator.py
 
 Your browser opens at http://127.0.0.1:8765. Press Ctrl+C in the terminal window to stop it.
 
-## On a call: the walkthrough
+## On a call
 
-1. Tick **Client view** before you share your screen. It hides the file bar, the "Pricing and setup" tab and the internal coaching checks.
-2. Click **New walkthrough**, type the company name, and go through **1 Questions** with the client, one step at a time:
-   - The task
-   - Time and volume
-   - What the time costs
-   - What goes wrong
-   - The freed time
-   - Rolling it out
-   - With the automation (your estimate)
-3. Each number takes one answer plus "How sure are you?". The answer sets how wide the range is:
+The calculator has three steps, in plain English:
 
-   | Answer | Range around their number |
-   |---|---|
-   | Timed it | ±10% |
-   | Pretty sure | 0.8x to 1.25x |
-   | Rough guess | 0.6x to 1.5x |
-   | No real idea | 0.4x to 2x |
+1. **Your process.** The task, the hours a week, the people, their hourly cost, what mistakes cost, and how sure the client is of those numbers.
+2. **The automation.** How much time it saves, team uptake, build time and cost, the monthly cost, who looks after it, what the freed time is used for, and whether the work is billed by the hour.
+3. **Results.** The first-year savings, break-even, hours back each week, 3-year savings, three charts, and plain-language advice. The Cautious case is the default and the one you quote.
 
-   Click "adjust range" to set the low and high by hand.
-4. Step 2 plays back the hours a month and the cost a year. Ask, "Does that sound right?" Their yes is the implication question answered in their own words.
-5. The live strip shows the conservative numbers as you go. Untick "Show live numbers" to save the reveal for the end.
-6. Open **2 Results** and read "In plain words". It always quotes the conservative case.
-7. **3 Compare tasks** ranks every task you walked through (add more with **+ Task**).
-8. Before or after the call, set fees, the AI model and token sizes in **Pricing and setup**. That tab is internal and shows the pricing guidance.
+The menu (☰) holds Start a new one, Open, Save, and "Show my pricing notes", which is internal and off by default. The moon/sun button switches theme.
+
+The earlier detailed version, with seven steps and audit ranking, is still available at http://127.0.0.1:8765/static/advanced.html.
 
 ## During an audit
 
