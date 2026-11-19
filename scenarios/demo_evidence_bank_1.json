@@ -1,0 +1,115 @@
+{
+  "meta": {
+    "title": "Demo: audit model build (evidence bank #1)",
+    "client": "Rehearsal only, not a prospect",
+    "prepared_by": "Kassem Harb, Celestial Automation",
+    "notes": "Time per run (10 to 24 h before, 1 to 2 h after) is from evidence bank #1. Volume (15 to 20 audits a month) was reported secondhand. Salary, fees and adoption are placeholder estimates for rehearsal. Do not quote."
+  },
+  "active": 0,
+  "candidates": [
+    {
+      "name": "Audit base-case and efficient-case model build",
+      "task_owner": "Lead auditing engineer (placeholder)",
+      "notes": "Evidence bank #1. Before: 10 to 24 engineering hours per audit. After: 1 to 2 hours. Pre-AI tool, so no token cost.",
+      "billing_model": "internal",
+      "pathway": "capacity",
+      "error_type": "rework",
+      "quote_basis": "cash",
+      "baseline_measured": false,
+      "audit_credited": true,
+      "model_preset": "none",
+      "other_value_note": "",
+      "salary": 90000,
+      "burden_pct": 25,
+      "paid_hours": 1900,
+      "loaded_rate_override": 0,
+      "overtime_multiplier": 1.5,
+      "bill_rate": 150,
+      "billable_share_pct": 0,
+      "runs_per_month": [
+        15,
+        17,
+        20
+      ],
+      "minutes_before": [
+        600,
+        900,
+        1440
+      ],
+      "minutes_after": [
+        60,
+        90,
+        120
+      ],
+      "adoption_pct": [
+        70,
+        85,
+        95
+      ],
+      "ramp_months": [
+        1,
+        2,
+        3
+      ],
+      "golive_weeks": [
+        6,
+        8,
+        10
+      ],
+      "convert_pct": [
+        25,
+        50,
+        75
+      ],
+      "errors_per_month": [
+        0,
+        0,
+        0
+      ],
+      "error_reduction_pct": [
+        0,
+        0,
+        0
+      ],
+      "cost_per_error": [
+        0,
+        0,
+        0
+      ],
+      "other_value_month": [
+        0,
+        0,
+        0
+      ],
+      "tokens_in": [
+        0,
+        0,
+        0
+      ],
+      "tokens_out": [
+        0,
+        0,
+        0
+      ],
+      "client_setup_hours": [
+        10,
+        16,
+        24
+      ],
+      "owner_hours_month": [
+        2,
+        3,
+        5
+      ],
+      "audit_fee": 750,
+      "build_fee": 9000,
+      "upfront_pct": 50,
+      "care_plan_month": 0,
+      "subscriptions_month": 0,
+      "price_in_usd": 0,
+      "price_out_usd": 0,
+      "fx_usd_cad": 1.42,
+      "discount_rate_pct": 10
+    }
+  ]
+}

@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ROI walkthrough · Celestial Automation</title>
+<link rel="icon" href="/static/emblem.png">
+<style>@font-face{font-family:"Sora";src:url(/static/fonts/sora-latin-400-normal.woff2) format("woff2");font-weight:400;font-display:swap}
+@font-face{font-family:"Sora";src:url(/static/fonts/sora-latin-600-normal.woff2) format("woff2");font-weight:600;font-display:swap}
+@font-face{font-family:"Sora";src:url(/static/fonts/sora-latin-700-normal.woff2) format("woff2");font-weight:700;font-display:swap}
+@font-face{font-family:"IBM Plex Sans";src:url(/static/fonts/ibm-plex-sans-latin-400-normal.woff2) format("woff2");font-weight:400;font-display:swap}
+@font-face{font-family:"IBM Plex Sans";src:url(/static/fonts/ibm-plex-sans-latin-500-normal.woff2) format("woff2");font-weight:500;font-display:swap}
+@font-face{font-family:"IBM Plex Sans";src:url(/static/fonts/ibm-plex-sans-latin-600-normal.woff2) format("woff2");font-weight:600;font-display:swap}
+@font-face{font-family:"IBM Plex Mono";src:url(/static/fonts/ibm-plex-mono-latin-500-normal.woff2) format("woff2");font-weight:500;font-display:swap}
+
+/* Tokens copied from the Celestial Automation website (src/styles.css, 2026-11-19 redesign).
+   Light is the default; .dark on <html> switches, same as the site. */
+:root{
+  --font-display:"Sora",ui-sans-serif,system-ui,sans-serif;
+  --font-sans:"IBM Plex Sans",ui-sans-serif,system-ui,sans-serif;
+  --font-mono:"IBM Plex Mono",ui-monospace,monospace;
+  --radius:0.75rem;
+  --background:oklch(0.985 0.004 250); --foreground:oklch(0.24 0.028 262);
+  --card:oklch(1 0 0); --primary:oklch(0.25 0.03 262); --primary-fg:oklch(0.99 0 0);
+  --secondary:oklch(0.955 0.006 255); --muted-bg:oklch(0.965 0.004 255); --muted-fg:oklch(0.49 0.02 260);
+  --accent:oklch(0.95 0.008 255); --destructive:oklch(0.58 0.21 25);
+  --border:oklch(0.24 0.028 262 / 11%); --input:oklch(0.24 0.028 262 / 14%); --ring:oklch(0.58 0.1 62);
+  --gold:oklch(0.56 0.1 60); --gold-soft:oklch(0.56 0.1 60 / 10%);
+  --page-bg:radial-gradient(ellipse 55% 38% at 50% -8%, oklch(0.56 0.1 60 / 7%), transparent 62%),radial-gradient(ellipse 40% 30% at 92% 8%, oklch(0.5 0.08 262 / 5%), transparent 60%),var(--background);
+  --bg-highlight:linear-gradient(162deg, oklch(1 0 0), oklch(0.985 0.012 70));
+  --shadow-card:0 1px 2px oklch(0.24 0.028 262 / 5%), 0 14px 34px -22px oklch(0.24 0.028 262 / 20%);
+  --shadow-highlight:0 0 0 1px oklch(0.56 0.1 60 / 26%), 0 32px 70px -36px oklch(0.56 0.1 60 / 30%);
+  --header-bg:oklch(0.985 0.004 250 / 72%); --orbit-opacity:0.5;
+  /* aliases used by the charts and components */
+  --ink:var(--foreground); --ink-2:oklch(0.36 0.025 262); --muted:var(--muted-fg);
+  --field:oklch(1 0 0); --card-2:var(--muted-bg); --line:var(--input); --line-soft:var(--border);
+  --accent-ink:var(--primary-fg);
+  /* chart palette, validated light column */
+  --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a; --seq:#2a78d6; --grid:oklch(0.24 0.028 262 / 8%); --axis:oklch(0.24 0.028 262 / 25%);
+  --good:#0ca30c; --warning:#d99700; --serious:#e0602c; --critical:#d03b3b; --info:#2a78d6; --negnum:oklch(0.55 0.2 25);
+  font-family:var(--font-sans);
+}
+.dark{
+  --background:oklch(0.17 0.024 262); --foreground:oklch(0.96 0.006 250);
+  --card:oklch(0.205 0.028 262); --primary:oklch(0.95 0.012 250); --primary-fg:oklch(0.2 0.028 262);
+  --secondary:oklch(0.24 0.032 262); --muted-bg:oklch(0.24 0.03 262); --muted-fg:oklch(0.72 0.02 258);
+  --accent:oklch(0.26 0.036 262); --destructive:oklch(0.64 0.2 25);
+  --border:oklch(1 0 0 / 10%); --input:oklch(1 0 0 / 14%); --ring:oklch(0.84 0.09 80);
+  --gold:oklch(0.84 0.09 80); --gold-soft:oklch(0.84 0.09 80 / 14%);
+  --page-bg:radial-gradient(ellipse 72% 48% at 50% -4%, oklch(0.4 0.07 262 / 55%), transparent 70%),radial-gradient(ellipse 50% 38% at 88% 55%, oklch(0.34 0.06 285 / 32%), transparent 72%),linear-gradient(180deg, oklch(0.2 0.03 262) 0%, oklch(0.155 0.024 262) 100%);
+  --bg-highlight:linear-gradient(160deg, oklch(0.235 0.04 262), oklch(0.185 0.03 262));
+  --shadow-card:0 1px 2px oklch(0 0 0 / 30%), 0 22px 54px -32px oklch(0 0 0 / 65%);
+  --shadow-highlight:0 0 0 1px oklch(0.84 0.09 80 / 34%), 0 26px 64px -26px oklch(0.84 0.09 80 / 22%);
+  --header-bg:oklch(0.17 0.024 262 / 72%); --orbit-opacity:0.6;
+  --ink-2:oklch(0.85 0.012 255); --field:oklch(0.18 0.026 262);
+  --s1:#3987e5; --s2:#d95926; --s3:#199e70; --seq:#3987e5; --grid:oklch(1 0 0 / 7%); --axis:oklch(1 0 0 / 22%);
+  --warning:#fab219; --serious:#ec835a; --info:#86b6ef; --negnum:oklch(0.75 0.15 25);
+}
+*{box-sizing:border-box}
+html{background:var(--background);scroll-padding-top:5rem}
+body{margin:0;background:var(--page-bg);background-attachment:fixed;color:var(--foreground);font-size:14px;-webkit-font-smoothing:antialiased;min-height:100vh;transition:background-color .3s,color .3s}
+h1,h2,h3,h4{font-family:var(--font-display);letter-spacing:-0.02em}
+button,input,select,textarea{font:inherit;color:inherit}
+.app{position:relative;isolation:isolate;max-width:1360px;margin:0 auto;padding:0 20px 48px}
+.orbits{position:absolute;left:0;right:0;top:40px;margin:0 auto;width:100%;max-width:1100px;color:var(--gold);opacity:var(--orbit-opacity);pointer-events:none;z-index:-1}
+
+/* header, as on the site */
+header.top{position:sticky;top:0;z-index:30;display:flex;align-items:center;gap:14px;height:64px;padding:0 20px;margin:0 -20px;border-bottom:1px solid var(--border);background:var(--header-bg);backdrop-filter:blur(12px)}
+.brand{display:flex;align-items:center;gap:12px}
+.brand img{height:27px;width:auto;transition:filter .3s}
+.dark .brand img{filter:invert(1) hue-rotate(180deg) brightness(1.08)}
+.brand .divider{width:1px;height:20px;background:var(--border)}
+.brand .name{font-family:var(--font-display);font-size:14px;font-weight:600;letter-spacing:-0.01em}
+.brand .t1{font-size:13px;font-weight:500;color:var(--gold)}
+.spacer{flex:1}
+.iconbtn{display:grid;place-items:center;width:36px;height:36px;border-radius:.6rem;border:1px solid var(--border);background:transparent;color:var(--muted-fg);cursor:pointer}
+.iconbtn:hover{background:var(--accent);color:var(--foreground)}
+.iconbtn svg{width:17px;height:17px}
+
+/* buttons, as on the site */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border-radius:.6rem;border:1px solid var(--border);background:var(--secondary);color:var(--foreground);font-weight:500;padding:8px 14px;cursor:pointer;transition:border-color .2s,background-color .2s}
+.btn:hover{background:var(--accent);border-color:var(--input)}
+.btn.primary{background:var(--primary);color:var(--primary-fg);border-color:transparent;font-weight:600;box-shadow:0 1px 2px oklch(0.24 0.028 262 / 12%);transition:transform .15s,box-shadow .2s,opacity .2s}
+.btn.primary:hover{transform:translateY(-1px);opacity:.92;box-shadow:0 12px 28px -14px var(--primary)}
+.btn.small{padding:6px 11px;font-size:13px}
+.btn.big{padding:11px 20px;font-size:14.5px}
+.btn:disabled{opacity:.45;cursor:default;transform:none}
+.btn:focus-visible,.iconbtn:focus-visible{outline:2px solid var(--ring);outline-offset:3px}
+.toggle{display:inline-flex;align-items:center;gap:8px;color:var(--muted-fg);cursor:pointer;user-select:none;font-size:13.5px}
+.toggle input{accent-color:var(--primary);width:16px;height:16px}
+
+/* eyebrow: sentence case with a short leading rule */
+.eyebrow{display:inline-flex;align-items:center;gap:.6rem;font-size:13px;font-weight:500;letter-spacing:.01em;color:var(--gold)}
+.eyebrow::before{content:"";display:inline-block;width:24px;height:1px;background:currentColor;opacity:.5}
+
+/* surfaces */
+.card{background:var(--card);border:1px solid var(--border);border-radius:calc(var(--radius) + 4px);box-shadow:var(--shadow-card);padding:20px 22px}
+.card h3{margin:0 0 14px;display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;font-family:var(--font-sans);font-size:13px;font-weight:500;letter-spacing:.01em;color:var(--gold)}
+.card h3::before{content:"";display:inline-block;width:24px;height:1px;background:currentColor;opacity:.5}
+.card.highlight{background:var(--bg-highlight);box-shadow:var(--shadow-highlight);border-radius:calc(var(--radius) + 8px)}
+.stack{display:flex;flex-direction:column;gap:16px}
+.note{color:var(--muted-fg);font-size:12.5px;line-height:1.5}
+.casepill{display:inline-block;font-size:11.5px;padding:2px 9px;border-radius:999px;border:1px solid var(--border);color:var(--muted-fg);font-weight:500;letter-spacing:0}
+.internal-tag{font-size:11px;color:var(--destructive);border:1px solid color-mix(in oklch, var(--destructive) 35%, transparent);border-radius:999px;padding:1px 8px;font-weight:500}
+body.client .internal{display:none !important}
+.print-only{display:none}
+.busy{opacity:.6;transition:opacity .2s}
+
+/* file bar and nav */
+.scenbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:14px 0 4px;color:var(--muted-fg);font-size:13px}
+.scenbar input[type=text],.scenbar select{background:var(--field);border:1px solid var(--input);border-radius:.6rem;padding:6px 10px;min-width:180px;max-width:320px}
+.status{font-size:12px;color:var(--muted-fg)}
+.navbar{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:12px 0 20px}
+.taskpick{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.taskpick .lab{font-size:12.5px;color:var(--muted-fg);font-weight:500}
+.taskpick select,.taskpick input{background:var(--field);border:1px solid var(--input);border-radius:.6rem;padding:8px 11px;font-weight:500}
+.taskpick select{max-width:340px}
+.views{display:inline-flex;gap:4px;margin-left:auto;padding:4px;border-radius:.8rem;background:var(--secondary);border:1px solid var(--border)}
+.views button{border:0;background:transparent;color:var(--muted-fg);padding:8px 14px;border-radius:.55rem;cursor:pointer;font-weight:500}
+.views button .n{font-family:var(--font-mono);font-size:12px;color:var(--gold);margin-right:7px}
+.views button:hover{color:var(--foreground)}
+.views button.on{background:var(--card);color:var(--foreground);box-shadow:var(--shadow-card)}
+.views button.internal-view{color:var(--destructive)}
+
+/* walkthrough */
+.walk{display:grid;grid-template-columns:260px 1fr;gap:22px;align-items:start}
+.steps{position:sticky;top:84px;display:flex;flex-direction:column;gap:6px}
+.steps button{display:flex;gap:12px;align-items:center;text-align:left;border:1px solid transparent;background:transparent;border-radius:.75rem;padding:10px 12px;cursor:pointer;color:var(--muted-fg)}
+.steps button .dot{font-family:var(--font-mono);font-size:15px;color:var(--gold);width:26px;opacity:.65}
+.steps button .tt{font-family:var(--font-display);font-weight:600;font-size:14px;color:var(--foreground)}
+.steps button .st{font-size:12px;color:var(--muted-fg)}
+.steps button:hover{background:var(--accent)}
+.steps button.on{background:var(--card);border-color:var(--border);box-shadow:var(--shadow-card)}
+.steps button.on .dot{opacity:1}
+.steps button.done .dot{opacity:1}
+.steps button.gotoResults{display:flex;justify-content:center;margin-top:14px;background:var(--primary);color:var(--primary-fg);font-weight:600;border-radius:.6rem;padding:11px 14px}
+.steps button.gotoResults:hover{opacity:.92;background:var(--primary)}
+.stepcard{min-height:440px;display:flex;flex-direction:column;padding:30px 34px}
+.stepcard h2{margin:12px 0 6px;font-size:30px;font-weight:600;line-height:1.15}
+.stepcard .lede{color:var(--muted-fg);margin:0 0 20px;font-size:16px;line-height:1.6;max-width:720px}
+.q{padding:18px 0;border-top:1px solid var(--border)}
+.q:first-of-type{border-top:0}
+.q .qt{font-family:var(--font-display);font-size:17px;font-weight:600;margin-bottom:4px}
+.q .qh{color:var(--muted-fg);font-size:13.5px;margin-bottom:12px;line-height:1.5;max-width:720px}
+.q .ctl{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.q input[type=number],.q input[type=text],.q select,.q textarea{background:var(--field);border:1px solid var(--input);border-radius:.6rem;padding:10px 12px;color:var(--foreground);font-size:15px}
+.q input[type=number]{width:120px;text-align:right;font-variant-numeric:tabular-nums}
+.q input[type=text]{min-width:320px}
+.q textarea{width:100%;min-height:64px;resize:vertical}
+.q select{min-width:200px}
+.q select.wide{min-width:380px}
+.q input:focus,.q select:focus,.q textarea:focus{outline:2px solid var(--ring);outline-offset:1px;border-color:transparent}
+.q .sure{display:flex;align-items:center;gap:8px;color:var(--muted-fg);font-size:13px;margin-left:8px}
+.q .sure select{min-width:170px;font-size:14px;padding:8px 10px}
+.q .rng{margin-top:10px;font-size:13px;color:var(--muted-fg);display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.q .rng b{font-weight:600;color:var(--foreground)}
+.q .rng .tag{font-weight:500;color:var(--muted-fg)}
+.linkbtn{border:0;background:transparent;color:var(--gold);cursor:pointer;padding:0;font-size:13px;font-weight:500;text-decoration:underline;text-underline-offset:3px}
+.q .tri3{display:none;grid-template-columns:repeat(3,112px);gap:8px;margin-top:10px}
+.q .tri3.open{display:grid}
+.q .tri3 label{font-size:11.5px;color:var(--muted-fg);display:flex;flex-direction:column;gap:4px}
+.q .tri3 input{width:112px}
+.q .unitsuffix{color:var(--muted-fg)}
+.q.hidden{display:none}
+.calloutbox{margin-top:8px;padding:16px 18px;border-radius:var(--radius);background:var(--bg-highlight);box-shadow:var(--shadow-highlight);font-size:15px;line-height:1.55}
+.calloutbox b{font-family:var(--font-display);font-size:18px;font-weight:600}
+.stepnav{margin-top:auto;padding-top:20px;display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--border)}
+.livestrip{display:flex;gap:18px;align-items:center;flex-wrap:wrap;padding:12px 18px;margin-bottom:16px;border-radius:var(--radius);background:var(--card);border:1px solid var(--border);box-shadow:var(--shadow-card);font-variant-numeric:tabular-nums}
+.livestrip .k{font-size:12px;color:var(--muted-fg);margin-right:6px}
+.livestrip .v{font-family:var(--font-display);font-weight:600}
+.livestrip .v.neg{color:var(--negnum)}
+.livestrip>.k{font-family:var(--font-mono);color:var(--gold)}
+.livestrip .sp{flex:1}
+body.nolive .livestrip .vals{display:none}
+
+/* results */
+.rgrid{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start}
+.rgrid .span2{grid-column:1 / -1}
+.setupgrid{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start}
+.seg{display:inline-flex;gap:3px;padding:4px;border-radius:.8rem;background:var(--secondary);border:1px solid var(--border)}
+.seg button{border:0;background:transparent;padding:6px 12px;border-radius:.55rem;cursor:pointer;color:var(--muted-fg);font-weight:500}
+.seg button.on{background:var(--card);color:var(--foreground);box-shadow:var(--shadow-card)}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.kpi{border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;background:var(--card)}
+.kpi:first-child{background:var(--bg-highlight);box-shadow:var(--shadow-highlight);border-color:transparent}
+.kpi .lab{color:var(--muted-fg);font-size:12.5px;font-weight:500}
+.kpi .val{font-family:var(--font-display);font-size:27px;font-weight:600;margin:6px 0 4px;font-variant-numeric:tabular-nums;letter-spacing:-0.02em}
+.kpi .sub{color:var(--muted-fg);font-size:12px;font-variant-numeric:tabular-nums}
+.kpi.neg .val{color:var(--negnum)}
+.say{border-left:2px solid var(--gold);padding:4px 0 4px 16px;line-height:1.6;font-size:16px}
+.say-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.say-head h3{margin:0}
+.flags{display:flex;flex-direction:column;gap:8px}
+.flag{display:grid;grid-template-columns:20px 1fr;gap:10px;align-items:start;font-size:13.5px;line-height:1.45;padding:10px 12px;border-radius:.6rem;background:var(--muted-bg);border:1px solid var(--border)}
+.flag .ic{font-weight:700;text-align:center;border-radius:50%;width:19px;height:19px;line-height:19px;font-size:11px;color:#111}
+.flag.critical .ic{background:var(--critical);color:#fff}
+.flag.serious .ic{background:var(--serious)}
+.flag.warning .ic{background:var(--warning)}
+.flag.info .ic{background:var(--info);color:#fff}
+.flag .lv{font-size:11.5px;font-weight:600;color:var(--muted-fg);margin-right:6px;text-transform:capitalize}
+table.t{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums;font-size:13.5px}
+table.t th,table.t td{padding:7px 9px;border-bottom:1px solid var(--border);text-align:right}
+table.t th:first-child,table.t td:first-child{text-align:left;color:var(--ink-2)}
+table.t thead th{color:var(--muted-fg);font-weight:500;font-size:12.5px}
+table.t td.cons,table.t th.cons{background:var(--gold-soft)}
+table.t tr.sub td:first-child{padding-left:22px;color:var(--muted-fg)}
+table.t tr.strong td{font-weight:600;color:var(--foreground)}
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:12.5px;color:var(--muted-fg);margin-bottom:8px}
+.legend i{display:inline-block;width:14px;height:3px;border-radius:2px;vertical-align:middle;margin-right:6px}
+.legend i.sq{height:10px;width:10px;border-radius:3px}
+.chart{position:relative}
+.chart svg{display:block;width:100%;height:auto;overflow:visible}
+.tip{position:absolute;pointer-events:none;background:var(--card);border:1px solid var(--border);border-radius:.6rem;padding:9px 11px;font-size:12.5px;line-height:1.5;white-space:nowrap;box-shadow:var(--shadow-card);display:none;z-index:5;font-variant-numeric:tabular-nums}
+.tip b{font-weight:600}
+.tip .sw{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:6px;vertical-align:middle}
+.mcstats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:12px}
+.mcstats div{background:var(--muted-bg);border-radius:.6rem;padding:10px 12px}
+.mcstats .v{font-family:var(--font-display);font-size:18px;font-weight:600;font-variant-numeric:tabular-nums}
+.mcstats .l{font-size:12px;color:var(--muted-fg)}
+.pricegrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.pricegrid div{background:var(--muted-bg);border-radius:.6rem;padding:11px 13px}
+.pricegrid .v{font-family:var(--font-display);font-size:17px;font-weight:600;font-variant-numeric:tabular-nums}
+.pricegrid .l{font-size:12px;color:var(--muted-fg)}
+.badge{display:inline-block;padding:2px 9px;border-radius:999px;font-size:12px;white-space:nowrap;font-weight:500}
+.badge.ok{background:color-mix(in oklch, var(--good) 14%, transparent);color:color-mix(in oklch, var(--good) 75%, var(--foreground))}
+.badge.no{background:color-mix(in oklch, var(--critical) 13%, transparent);color:color-mix(in oklch, var(--critical) 80%, var(--foreground))}
+.empty{color:var(--muted-fg);padding:24px;text-align:center}
+details summary{cursor:pointer}
+
+@media (max-width:1100px){.walk{grid-template-columns:1fr}.steps{position:static;flex-direction:row;flex-wrap:wrap}.rgrid,.setupgrid{grid-template-columns:1fr}.views{margin-left:0}.kpis{grid-template-columns:repeat(2,1fr)}}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto;transition:none !important}}
+@media print{
+  html,body{background:#fff !important;color:#111}
+  .noprint,.scenbar,.navbar,.walk,#viewSetup,#viewCompare,#viewQuestions,.internal,.btn,.seg,.iconbtn,.orbits,header.top .controls{display:none !important}
+  #viewResults{display:block !important}
+  .print-only{display:block}
+  header.top{position:static;background:#fff;backdrop-filter:none;margin:0;padding:0 0 8px}
+  .rgrid{display:block}
+  .card{break-inside:avoid;box-shadow:none;margin-bottom:12px}
+  @page{size:letter;margin:12mm}
+}
+</style>
+</head>
+<body>
+<script>try{if(localStorage.getItem("theme")==="dark")document.documentElement.classList.add("dark")}catch(e){}</script>
+<div class="app">
+  <svg aria-hidden="true" class="orbits" viewBox="0 0 1200 320" preserveAspectRatio="xMidYMid meet">
+    <g fill="none" stroke="currentColor" stroke-width="1"><ellipse cx="600" cy="160" rx="560" ry="110" opacity="0.35"/><ellipse cx="600" cy="160" rx="420" ry="80" opacity="0.45" transform="rotate(-8 600 160)"/></g>
+    <polyline points="60,90 160,40 260,110 360,70" fill="none" stroke="currentColor" stroke-width="0.75" stroke-dasharray="2 5" opacity="0.6"/>
+    <polyline points="900,50 1010,120 1120,70" fill="none" stroke="currentColor" stroke-width="0.75" stroke-dasharray="2 5" opacity="0.6"/>
+    <circle cx="60" cy="90" r="2" fill="currentColor"/><circle cx="160" cy="40" r="2" fill="currentColor"/><circle cx="260" cy="110" r="2" fill="currentColor"/><circle cx="360" cy="70" r="2" fill="currentColor"/>
+    <circle cx="900" cy="50" r="2" fill="currentColor"/><circle cx="1010" cy="120" r="2" fill="currentColor"/><circle cx="1120" cy="70" r="2" fill="currentColor"/>
+  </svg>
+  <header class="top">
+    <div class="brand">
+      <img src="/static/emblem.png" alt="">
+      <span class="divider" aria-hidden="true"></span>
+      <span class="name">Celestial Automation</span>
+      <span class="divider" aria-hidden="true"></span>
+      <span class="t1">ROI walkthrough</span>
+    </div>
+    <div class="spacer"></div>
+    <div class="controls noprint" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+      <label class="toggle" title="Hides the internal tab, pricing guidance and coaching checks before you share your screen"><input type="checkbox" id="clientView"> Client view</label>
+      <button class="iconbtn" id="themeBtn" type="button" aria-label="Switch theme"></button>
+      <button class="btn" id="btnPrint" title="Print or save the results as a PDF">Print results</button>
+      <button class="btn primary" id="btnExport" title="Download a macro-free Excel workbook with live formulas">Export Excel</button>
+    </div>
+  </header>
+
+  <div class="print-only" id="printHead" style="margin:6px 0 10px"></div>
+
+  <div class="scenbar noprint internal">
+    <span>File</span>
+    <select id="scenList" aria-label="Open a saved walkthrough"></select>
+    <button class="btn small" id="btnOpen">Open</button>
+    <button class="btn small" id="btnNew">New walkthrough</button>
+    <span style="width:10px"></span>
+    <input type="text" id="saveName" placeholder="file name" aria-label="File name">
+    <button class="btn small" id="btnSave">Save</button>
+    <span class="status" id="status"></span>
+  </div>
+
+  <div class="navbar noprint">
+    <div class="taskpick">
+      <span class="lab">Client</span>
+      <input type="text" id="clientName" placeholder="Company name" style="background:var(--field);border:1px solid var(--line);border-radius:999px;padding:7px 12px;width:190px">
+      <span class="lab" style="margin-left:6px">Task</span>
+      <select id="taskSel" aria-label="Task being discussed"></select>
+      <button class="btn small" id="addCand" title="Add another task">+ Task</button>
+      <button class="btn small internal" id="dupCand">Duplicate</button>
+      <button class="btn small internal" id="delCand">Remove</button>
+    </div>
+    <div class="views" role="tablist">
+      <button data-view="questions" class="on"><span class="n">1</span>Questions</button>
+      <button data-view="results"><span class="n">2</span>Results</button>
+      <button data-view="compare"><span class="n">3</span>Compare tasks (<span id="cmpCount">1</span>)</button>
+      <button data-view="setup" class="internal internal-view">Pricing and setup</button>
+    </div>
+  </div>
+
+  <div id="viewQuestions" class="walk">
+    <nav class="steps" id="steps" aria-label="Walkthrough steps"></nav>
+    <div>
+      <div class="livestrip noprint"><span class="k">Live</span><span class="vals" id="liveVals" style="display:flex;gap:22px;flex-wrap:wrap"></span><span class="sp"></span>
+        <label class="toggle" style="font-size:12px"><input type="checkbox" id="liveToggle" checked> Show live numbers</label></div>
+      <div class="card stepcard"><div id="stepBody"></div><div class="stepnav" id="stepNav"></div></div>
+    </div>
+  </div>
+  <div id="viewResults" style="display:none"></div>
+  <div id="viewCompare" style="display:none"></div>
+  <div id="viewSetup" class="internal" style="display:none"><div class="setupgrid"><div id="setupInputs" class="stack"></div><div id="setupPricing" class="stack" style="position:sticky;top:78px"></div></div></div>
+</div>
+
+<script>
+"use strict";
+const $ = (s, el=document) => el.querySelector(s);
+const $$ = (s, el=document) => Array.from(el.querySelectorAll(s));
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+const S = { schema:null, scenario:null, file:null, active:0, kase:"conservative", view:"questions", step:0,
+            result:null, compare:null, calcSeq:0, dirty:false };
+const CASES = ["conservative","expected","optimistic"];
+const CASE_LABEL = {conservative:"Conservative", expected:"Expected", optimistic:"Optimistic"};
+const CASE_COLOR = {conservative:"var(--s1)", expected:"var(--s2)", optimistic:"var(--s3)"};
+
+/* ---------- formatting ---------- */
+function money(x, opts={}){
+  if (x === null || x === undefined || !isFinite(x)) return "n/a";
+  const neg = x < 0; const a = Math.abs(x);
+  let s;
+  if (opts.compact && a >= 1e6) s = "$" + (a/1e6).toFixed(2) + "M";
+  else if (opts.compact && a >= 1e4) s = "$" + (a/1e3).toFixed(a >= 1e5 ? 0 : 1) + "k";
+  else s = "$" + a.toLocaleString("en-CA", {maximumFractionDigits: opts.cents ? 2 : 0, minimumFractionDigits: opts.cents ? 2 : 0});
+  return (neg ? "-" : "") + s;
+}
+function months(x){ if (x === null || x === undefined) return "Not in 36 mo"; if (x < 1) return "< 1 mo"; return x.toFixed(1) + " mo"; }
+function num(x, d=1){ if (x === null || x === undefined || !isFinite(x)) return "n/a"; return x.toLocaleString("en-CA",{maximumFractionDigits:d, minimumFractionDigits:d}); }
+function pct(x){ return x === null || x === undefined ? "n/a" : Math.round(x*100) + "%"; }
+function dur(min){ if (!isFinite(min)) return "n/a"; return min >= 90 ? num(min/60, 1) + " h" : Math.round(min) + " min"; }
+function trimNum(x){ return Math.round(x*10)/10; }
+
+/* ---------- plain-language answer model ----------
+   The client gives one number and says how sure they are. That choice sets the
+   low / high range around it (wider when less sure), which feeds the engine's
+   three-point estimates. Any range can still be set by hand ("adjust"). */
+const CONF = {
+  measured:{lo:0.9, hi:1.1,  label:"Timed it (measured)"},
+  sure:    {lo:0.8, hi:1.25, label:"Pretty sure"},
+  guess:   {lo:0.6, hi:1.5,  label:"Rough guess"},
+  unknown: {lo:0.4, hi:2.0,  label:"No real idea"},
+};
+const PER = {day:{f:21.7, label:"a day"}, week:{f:52/12, label:"a week"}, month:{f:1, label:"a month"}, year:{f:1/12, label:"a year"}};
+const UNIT = {minutes:{f:1, label:"minutes"}, hours:{f:60, label:"hours"}};
+const VALUE_FIELDS = {          // key -> kind
+  runs_per_month:"per", minutes_before:"unit", minutes_after:"unit",
+  errors_per_month:"per", cost_per_error:"errcost", other_value_month:"money",
+};
+const PRESETS = {
+  convert_pct: {most:{t:[50,75,90], l:"Most of it would go to useful work"}, half:{t:[30,50,70], l:"About half (the usual assumption)"}, some:{t:[10,25,40], l:"Some of it"}},
+  adoption_pct: {all:{t:[80,90,95], l:"Everyone. It becomes how we do it"}, most:{t:[60,75,90], l:"Most of the team"}, mixed:{t:[40,55,75], l:"Mixed. Some people will resist"}},
+  golive_weeks: {fast:{t:[2,3,4], l:"2 to 3 weeks"}, month:{t:[3,4,6], l:"About a month"}, six:{t:[5,7,10], l:"6 to 8 weeks"}, quarter:{t:[8,12,16], l:"A quarter or more"}},
+  ramp_months: {quick:{t:[0.5,1,2], l:"Quickly, within a month"}, normal:{t:[1,2,3], l:"Over 2 to 3 months"}, slow:{t:[2,3,5], l:"Slowly, 3 months or more"}},
+  client_setup_hours: {light:{t:[4,6,8], l:"Light: a few hours"}, typical:{t:[8,12,16], l:"Typical: 1 to 2 days, spread out"}, heavy:{t:[16,22,30], l:"Heavy: 3 days or more"}},
+  owner_hours_month: {low:{t:[0.5,1,2], l:"About an hour a month"}, mid:{t:[1,2,4], l:"A couple of hours a month"}, high:{t:[4,6,8], l:"Half a day a month or more"}},
+  error_reduction_pct: {most:{t:[50,70,90], l:"Most of them"}, half:{t:[30,50,70], l:"About half"}, some:{t:[10,25,40], l:"Some of them"}},
+};
+const TOKEN_PRESETS = {
+  none:{in:[0,0,0], out:[0,0,0], l:"No AI step (rules and code only)"},
+  short:{in:[5000,10000,15000], out:[500,1000,2000], l:"Short inputs: a page or two per run"},
+  typical:{in:[20000,30000,50000], out:[2000,3000,5000], l:"Typical: a 10 to 20 page document per run"},
+  long:{in:[60000,100000,150000], out:[4000,6000,10000], l:"Long: big reports or many files per run"},
+};
+const SALARY = [[45000,55000],[55000,70000],[70000,85000],[85000,100000],[100000,120000],[120000,150000],[150000,190000]];
+const BURDEN = {15:"Basic: statutory only (about 15%)", 25:"Standard benefits (about 25%)", 35:"Generous benefits (about 35%)"};
+const ROLES = ["Engineer (P.Eng.)","Junior engineer or EIT","Technologist or technician","Project manager","Estimator","Drafter or designer","Coordinator or admin","Owner or principal","Other"];
+const PATHWAY_Q = {capacity:"Catch up on other work (no cash change)", overtime:"Work less overtime", hire:"Delay or avoid a hire", billable:"Take on more billable work"};
+const BILLING_Q = {fixed_fee:"Fixed fee or lump sum", time_and_materials:"Hourly (time and materials)", internal:"Internal work, not billed to anyone"};
+const BILLED_SHARE = {100:"Yes, all of it is billed", 50:"About half of it", 0:"No, it is overhead"};
+
+function cand(){ return S.scenario.candidates[S.active]; }
+function loadedRateJS(c){ return c.loaded_rate_override > 0 ? c.loaded_rate_override : c.salary*(1+c.burden_pct/100)/Math.max(1,c.paid_hours); }
+function round1(x){ return Math.round(x*10)/10; }
+function sameTri(a,b){ return a && b && a.length===3 && b.every((v,i)=>Math.abs(v-a[i]) < 0.051); }
+function triFrom(likely, conf, cap){
+  const C = CONF[conf]; let lo = likely*C.lo, hi = likely*C.hi;
+  if (cap !== undefined) hi = Math.min(cap, hi);
+  return [round1(lo), round1(likely), round1(hi)];
+}
+
+/* Build ui state from the stored ranges if a scenario has none (older files). */
+function ensureUI(c){
+  c.ui = c.ui || {};
+  for (const [k, kind] of Object.entries(VALUE_FIELDS)){
+    if (c.ui[k]) continue;
+    const t = c[k], likely = t[1]; let u = {conf:"custom"};
+    if (kind === "per") u = {...u, v:likely, per:"month"};
+    else if (kind === "unit") u = (likely >= 120 && likely % 30 === 0) ? {...u, v:likely/60, unit:"hours"} : {...u, v:likely, unit:"minutes"};
+    else if (kind === "errcost"){ const m = c.error_type === "cash" ? "money" : "rework"; u = {...u, method:m, v: m === "rework" ? Math.round(likely/loadedRateJS(c)*100)/100 : likely}; }
+    else u = {...u, v:likely};
+    const base = kind === "per" ? u.v*PER[u.per].f : kind === "unit" ? u.v*UNIT[u.unit].f : likely;
+    for (const cf of Object.keys(CONF)) if (sameTri(t, triFrom(base, cf))) { u.conf = cf; break; }
+    c.ui[k] = u;
+  }
+  for (const [k, opts] of Object.entries(PRESETS)){
+    if (c.ui[k]) continue;
+    const hit = Object.entries(opts).find(([,o]) => sameTri(c[k], o.t));
+    c.ui[k] = {preset: hit ? hit[0] : "custom"};
+  }
+  if (!c.ui.tokens){
+    const hit = Object.entries(TOKEN_PRESETS).find(([,o]) => sameTri(c.tokens_in, o.in) && sameTri(c.tokens_out, o.out));
+    c.ui.tokens = {preset: hit ? hit[0] : "custom"};
+  }
+  if (!c.ui.role) c.ui.role = "";
+}
+
+/* Push ui answers into the engine's ranges. Custom ranges are left alone. */
+function applyUI(c){
+  ensureUI(c);
+  for (const [k, kind] of Object.entries(VALUE_FIELDS)){
+    const u = c.ui[k]; if (!u || u.conf === "custom") continue;
+    let base = +u.v || 0;
+    if (kind === "per") base *= PER[u.per].f;
+    if (kind === "unit") base *= UNIT[u.unit].f;
+    if (kind === "errcost" && u.method === "rework") base *= loadedRateJS(c);
+    c[k] = triFrom(base, u.conf);
+  }
+  if (c.ui.cost_per_error) c.error_type = c.ui.cost_per_error.method === "rework" ? "rework" : "cash";
+  for (const k of Object.keys(PRESETS)){ const p = c.ui[k]?.preset; if (p && p !== "custom") c[k] = [...PRESETS[k][p].t]; }
+  const tp = c.ui.tokens?.preset; if (tp && tp !== "custom"){ c.tokens_in = [...TOKEN_PRESETS[tp].in]; c.tokens_out = [...TOKEN_PRESETS[tp].out]; }
+  c.baseline_measured = c.ui.minutes_before?.conf === "measured";
+}
+
+/* ---------- question widgets ---------- */
+const STEPS = [
+  {id:"task", title:"The task", sub:"What are we looking at", render:stepTask},
+  {id:"time", title:"Time and volume", sub:"How often, how long", render:stepTime},
+  {id:"cost", title:"What the time costs", sub:"Who does it", render:stepCost},
+  {id:"errors", title:"What goes wrong", sub:"Errors and rework", render:stepErrors},
+  {id:"freed", title:"The freed time", sub:"Where the value lands", render:stepFreed},
+  {id:"rollout", title:"Rolling it out", sub:"Adoption and ownership", render:stepRollout},
+  {id:"after", title:"With the automation", sub:"My estimate", render:stepAfter},
+];
+
+function qWrap(id, title, help, inner, extraClass=""){
+  return `<div class="q ${extraClass}" data-q="${id}"><div class="qt">${title}</div>${help?`<div class="qh">${help}</div>`:""}${inner}</div>`;
+}
+function sel(attrs, options, current, cls=""){
+  return `<select ${attrs} class="${cls}">${Object.entries(options).map(([v,l])=>`<option value="${esc(v)}" ${String(current)===String(v)?"selected":""}>${esc(l)}</option>`).join("")}</select>`;
+}
+function triInputs(k){
+  const c = cand(); const lab = ["Low","Likely","High"];
+  return `<div class="tri3" id="tri-${k}">${[0,1,2].map(i=>`<label>${lab[i]}<input type="number" step="any" min="0" data-tri="${k}" data-i="${i}" value="${c[k][i]}"></label>`).join("")}</div>`;
+}
+function rangeLine(k){ return `<div class="rng"><span class="tag">Range used</span><span data-rng="${k}"></span><button class="linkbtn" data-adjust="${k}">adjust range</button></div>`; }
+
+function qValue(k, title, help, opts={}){
+  const c = cand(), u = c.ui[k], kind = VALUE_FIELDS[k];
+  let ctl = `<input type="number" step="any" min="0" data-ui="${k}" data-part="v" value="${trimNum(u.v)}">`;
+  if (kind === "per") ctl += sel(`data-ui="${k}" data-part="per"`, Object.fromEntries(Object.entries(PER).map(([a,b])=>[a,b.label])), u.per||"month");
+  if (kind === "unit") ctl += sel(`data-ui="${k}" data-part="unit"`, Object.fromEntries(Object.entries(UNIT).map(([a,b])=>[a,b.label])), u.unit||"minutes");
+  if (opts.suffix) ctl += `<span class="unitsuffix">${opts.suffix}</span>`;
+  const confOpts = Object.fromEntries(Object.entries(CONF).map(([a,b])=>[a,b.label])); confOpts.custom = "Set range by hand";
+  ctl += `<span class="sure">How sure? ${sel(`data-ui="${k}" data-part="conf"`, confOpts, u.conf)}</span>`;
+  return qWrap(k, title, help, `<div class="ctl">${ctl}</div>${rangeLine(k)}${triInputs(k)}`, opts.cls||"");
+}
+function qPreset(k, title, help){
+  const c = cand(), p = c.ui[k].preset; const opts = Object.fromEntries(Object.entries(PRESETS[k]).map(([a,b])=>[a,b.l])); opts.custom = "Something else (set range)";
+  return qWrap(k, title, help, `<div class="ctl">${sel(`data-ui="${k}" data-part="preset"`, opts, p, "wide")}</div>${rangeLine(k)}${triInputs(k)}`);
+}
+function qPlainSelect(k, title, help, options, cls="wide", extra=""){
+  return qWrap(k, title, help, `<div class="ctl">${sel(`data-bind="${k}"`, options, cand()[k], cls)}${extra}</div>`);
+}
+function qNumber(k, title, help, suffix="", step="any"){
+  return qWrap(k, title, help, `<div class="ctl"><input type="number" step="${step}" min="0" data-bind="${k}" value="${cand()[k]}"><span class="unitsuffix">${suffix}</span></div>`);
+}
+
+function stepTask(){
+  const c = cand();
+  return `<div class="eyebrow">Step 1</div><h2>The task</h2>
+  <p class="lede">Pick one task that is repetitive and done often. We will put a number on what it costs today, then on what it would cost with the automation.</p>
+  ${qWrap("name","What is the task?","Name it the way your team would.", `<div class="ctl"><input type="text" data-bind="name" value="${esc(c.name)}" style="min-width:460px"></div>`)}
+  ${qWrap("role","Who does it today?","The role, not the person.", `<div class="ctl">${sel('data-ui="role" data-part="role"', Object.fromEntries([["",""],...ROLES.map(r=>[r,r])]), c.ui.role, "wide")}</div>`)}
+  ${qWrap("notes","How does it work today?","Inputs, steps, where the output goes. Your words.", `<textarea data-bind="notes">${esc(c.notes||"")}</textarea>`)}`;
+}
+function stepTime(){
+  return `<div class="eyebrow">Step 2</div><h2>Time and volume</h2>
+  <p class="lede">One number each is fine. Tell me how sure you are and I will widen the range to match. Week one of any build starts by timing the real task, which replaces these estimates.</p>
+  ${qValue("runs_per_month","How often is it done?","Across the whole team.")}
+  ${qValue("minutes_before","How long does one run take today?","From start to done, including chasing missing information.")}
+  <div class="calloutbox" id="todayBox"></div>`;
+}
+function stepCost(){
+  const c = cand(); const band = SALARY.findIndex(([a,b]) => Math.abs(c.salary - (a+b)/2) < 1);
+  const salOpts = Object.fromEntries(SALARY.map(([a,b],i)=>[String(i), `$${a/1000}k to $${b/1000}k a year`])); salOpts.exact = "I'll give an exact number";
+  const bOpts = {...BURDEN, custom:"Other"}; const bCur = BURDEN[c.burden_pct] ? String(c.burden_pct) : "custom";
+  const showExact = band < 0;
+  return `<div class="eyebrow">Step 3</div><h2>What the time costs</h2>
+  <p class="lede">A rough salary band is enough. We add employer costs on top to get a loaded hourly cost.</p>
+  ${qWrap("salary","Roughly what does that role earn?","", `<div class="ctl">${sel('data-sal="band"', salOpts, showExact ? "exact" : String(band), "wide")}
+     <input type="number" step="1000" min="0" data-bind="salary" value="${c.salary}" style="${showExact?"":"display:none"}" id="salExact"></div>`)}
+  ${qWrap("burden_pct","What benefits come on top?","Employer pension, EI, health tax, vacation and benefits.", `<div class="ctl">${sel('data-burden="sel"', bOpts, bCur, "wide")}
+     <input type="number" step="1" min="0" data-bind="burden_pct" value="${c.burden_pct}" style="${bCur==="custom"?"":"display:none"}" id="burdenExact"><span class="unitsuffix" style="${bCur==="custom"?"":"display:none"}" id="burdenPct">%</span></div>`)}
+  ${qWrap("override","Do you track a loaded hourly cost already?","If yes, use theirs. Leave at 0 to use the salary.", `<div class="ctl"><input type="number" step="1" min="0" data-bind="loaded_rate_override" value="${c.loaded_rate_override}"><span class="unitsuffix">$ per hour</span></div>`)}
+  <div class="calloutbox" id="rateBox"></div>`;
+}
+function stepErrors(){
+  const c = cand(), u = c.ui.cost_per_error;
+  const methodSel = sel('data-ui="cost_per_error" data-part="method"', {rework:"Mostly rework time (hours to fix it)", money:"Real money: write-offs, penalties, credits"}, u.method||"money", "wide");
+  const confOpts = Object.fromEntries(Object.entries(CONF).map(([a,b])=>[a,b.label])); confOpts.custom = "Set range by hand";
+  const cpe = `<div class="ctl">${methodSel}</div>
+    <div class="ctl" style="margin-top:8px"><input type="number" step="any" min="0" data-ui="cost_per_error" data-part="v" value="${u.v}">
+    <span class="unitsuffix">${u.method==="rework"?"hours to fix one":"dollars per mistake"}</span>
+    <span class="sure">How sure? ${sel('data-ui="cost_per_error" data-part="conf"', confOpts, u.conf)}</span></div>${rangeLine("cost_per_error")}${triInputs("cost_per_error")}`;
+  return `<div class="eyebrow">Step 4</div><h2>What goes wrong</h2>
+  <p class="lede">Mistakes, rework, a client catching an error, a second review cycle. Skip this step if nothing goes wrong.</p>
+  ${qValue("errors_per_month","How often does something go wrong?","A wrong number, a missed item, a rejected submission.")}
+  ${qWrap("cost_per_error","What does one mistake cost you?","", cpe)}
+  ${qPreset("error_reduction_pct","How many of those would the automation prevent?","My estimate. A consistent tool removes copy and transcription errors, not judgment errors.")}`;
+}
+function stepFreed(){
+  const c = cand();
+  const show = {ot: c.pathway==="overtime", bill: c.pathway==="billable" || c.billing_model==="time_and_materials", tm: c.billing_model==="time_and_materials"};
+  return `<div class="eyebrow">Step 5</div><h2>The freed time</h2>
+  <p class="lede">Hours only turn into money when something changes: less overtime, a hire you do not need, or more billable work. Otherwise they are capacity, and we report them as hours.</p>
+  ${qPlainSelect("pathway","If your team got these hours back, what would they do with them?","", PATHWAY_Q)}
+  ${qPreset("convert_pct","How much of that time would really be used that way?","Not every freed minute becomes value. Half is the usual assumption.")}
+  ${qNumber("overtime_multiplier","What is your overtime premium?","Usually 1.5 times the regular rate.","x",0.1).replace('class="q "', `class="q ${show.ot?"":"hidden"}"`)}
+  ${qPlainSelect("billing_model","How is this work paid for?","If clients pay by the hour, a faster task can mean less revenue. We check that here.", BILLING_Q)}
+  ${qWrap("billable_share_pct","Is the time on this task billed to your clients?","", `<div class="ctl">${sel('data-bind="billable_share_pct"', BILLED_SHARE, BILLED_SHARE[cand().billable_share_pct]!==undefined?cand().billable_share_pct:50, "wide")}</div>`, show.tm?"":"hidden")}
+  ${qNumber("bill_rate","What hourly rate do you charge clients?","","$ per hour",5).replace('class="q "', `class="q ${show.bill?"":"hidden"}"`)}`;
+}
+function stepRollout(){
+  const c = cand();
+  return `<div class="eyebrow">Step 6</div><h2>Rolling it out</h2>
+  <p class="lede">Tools only pay when people use them. These answers set how fast the value arrives.</p>
+  ${qPreset("adoption_pct","Once it works, how much of the team will use it?","")}
+  ${qPreset("ramp_months","How fast does your team usually pick up a new tool?","")}
+  ${qWrap("task_owner","Who on your side would own it?","One named person who checks it is working and flags problems. Every build needs one.", `<div class="ctl"><input type="text" data-bind="task_owner" value="${esc(c.task_owner||"")}" placeholder="Name or role"></div>`)}
+  ${qPreset("owner_hours_month","How much of their time would that take?","")}
+  ${qPreset("client_setup_hours","How much of your team's time for mapping, testing and training?","Sitting with me to walk through the task, checking outputs, one training session.")}
+  ${qPreset("golive_weeks","When would it go live after we agree to build?","")}`;
+}
+function stepAfter(){
+  return `<div class="eyebrow">Step 7</div><h2>With the automation</h2>
+  <p class="lede">This is my estimate, and it includes a person checking the output. I only build tools that someone on your team reviews before the result goes out.</p>
+  ${qValue("minutes_after","How long would one run take with the automation, including review?","")}
+  ${qValue("other_value_month","Is there any other value with a clear price?","Only if it has a price: invoices out sooner, faster replies to leads. Leave at 0 if not.", {suffix:"$ a month"})}
+  ${qWrap("other_value_note","What is it, and how did we price it?","", `<textarea data-bind="other_value_note">${esc(cand().other_value_note||"")}</textarea>`)}
+  <div class="calloutbox" id="afterBox"></div>`;
+}
+
+/* ---------- render questions ---------- */
+function renderQuestions(){
+  const c = cand(); ensureUI(c);
+  const st = STEPS[S.step];
+  $("#steps").innerHTML = STEPS.map((s,i)=>`<button class="${i===S.step?"on":""} ${i<S.step?"done":""}" data-step="${i}"><span class="dot">0${i+1}</span><span><span class="tt">${s.title}</span><br><span class="st">${s.sub}</span></span></button>`).join("")
+    + `<button class="btn primary big gotoResults" id="toResults">See the results →</button>`;
+  $$("#steps [data-step]").forEach(b => b.onclick = () => { S.step = +b.dataset.step; renderQuestions(); });
+  $("#toResults").onclick = () => setView("results");
+  $("#stepBody").innerHTML = st.render();
+  $("#stepNav").innerHTML = `<button class="btn big" id="prevStep" ${S.step===0?"disabled":""}>← Back</button>
+     <span class="note">Step ${S.step+1} of ${STEPS.length}</span>
+     ${S.step < STEPS.length-1 ? `<button class="btn primary big" id="nextStep">Next →</button>` : `<button class="btn primary big" id="finish">See the results →</button>`}`;
+  $("#prevStep").onclick = () => { if (S.step>0){ S.step--; renderQuestions(); } };
+  if ($("#nextStep")) $("#nextStep").onclick = () => { S.step++; renderQuestions(); window.scrollTo({top:0, behavior:"smooth"}); };
+  if ($("#finish")) $("#finish").onclick = () => setView("results");
+  bindInputs($("#stepBody"));
+  refreshDerived();
+}
+
+function bindInputs(root){
+  $$("[data-bind]", root).forEach(el => el.addEventListener(el.tagName === "SELECT" ? "change" : "input", onBind));
+  $$("[data-ui]", root).forEach(el => el.addEventListener(el.tagName === "SELECT" ? "change" : "input", onUI));
+  $$("[data-tri]", root).forEach(el => el.addEventListener("input", onTri));
+  $$("[data-adjust]", root).forEach(el => el.onclick = () => $("#tri-" + el.dataset.adjust).classList.toggle("open"));
+  $$("[data-sal]", root).forEach(el => el.addEventListener("change", e => {
+    const v = e.target.value, ex = $("#salExact");
+    if (v === "exact"){ ex.style.display = ""; ex.focus(); }
+    else { ex.style.display = "none"; const [a,b] = SALARY[+v]; cand().salary = (a+b)/2; ex.value = cand().salary; changed(false); }
+  }));
+  $$("[data-burden]", root).forEach(el => el.addEventListener("change", e => {
+    const v = e.target.value, ex = $("#burdenExact"), p = $("#burdenPct");
+    if (v === "custom"){ ex.style.display = ""; p.style.display = ""; ex.focus(); }
+    else { ex.style.display = "none"; p.style.display = "none"; cand().burden_pct = +v; ex.value = v; changed(false); }
+  }));
+}
+function onBind(e){
+  const el = e.target, k = el.dataset.bind, c = cand();
+  const numeric = el.type === "number" || ["billable_share_pct","upfront_pct"].includes(k);
+  c[k] = numeric ? (isFinite(parseFloat(el.value)) ? parseFloat(el.value) : 0) : el.value;
+  if (k === "name") renderTaskBar();
+  changed(el.tagName === "SELECT");
+}
+function onUI(e){
+  const el = e.target, k = el.dataset.ui, part = el.dataset.part, c = cand();
+  c.ui[k] = c.ui[k] || {};
+  if (part === "role"){ c.ui.role = el.value; return changed(false); }
+  if (part === "v") c.ui[k].v = isFinite(parseFloat(el.value)) ? parseFloat(el.value) : 0;
+  else c.ui[k][part] = el.value;
+  if (part === "v" && c.ui[k].conf === "custom") c.ui[k].conf = "guess";
+  if (part === "conf" && el.value === "custom") $("#tri-" + k)?.classList.add("open");
+  if (part === "preset" && el.value === "custom") $("#tri-" + k)?.classList.add("open");
+  changed(el.tagName === "SELECT" && ["method"].includes(part));
+}
+function onTri(e){
+  const el = e.target, k = el.dataset.tri, i = +el.dataset.i, c = cand();
+  const v = parseFloat(el.value); c[k][i] = isFinite(v) ? v : 0;
+  if (VALUE_FIELDS[k]){ c.ui[k].conf = "custom"; const s = $(`[data-ui="${k}"][data-part="conf"]`); if (s) s.value = "custom"; }
+  else if (PRESETS[k]){ c.ui[k].preset = "custom"; const s = $(`[data-ui="${k}"][data-part="preset"]`); if (s) s.value = "custom"; }
+  changed(false);
+}
+function changed(rerender){
+  applyUI(cand());
+  if (rerender && S.view === "questions"){ const y = window.scrollY; renderQuestions(); window.scrollTo(0, y); }
+  else refreshDerived();
+  markDirty(true);
+}
+
+/* Update range lines, tri boxes and callouts without re-rendering inputs. */
+function fmtTri(k, t){
+  const unit = (S.schema.triples[k]||{}).unit;
+  const f = v => unit === "%" ? Math.round(v)+"%" : unit === "min" ? dur(v) : (unit === "CAD" || unit === "CAD/mo") ? money(v) : num(v, v % 1 ? 1 : 0);
+  const per = unit === "runs/mo" || unit === "errors/mo" ? " a month" : unit === "CAD/mo" ? " a month" : unit === "h/mo" ? " h a month" : unit === "h" ? " h" : unit === "weeks" ? " weeks" : unit === "months" ? " months" : "";
+  return `<b>${f(t[0])}</b> to <b>${f(t[2])}</b>${per}, likely <b>${f(t[1])}</b>`;
+}
+function refreshDerived(){
+  const c = cand(); if (!c) return;
+  $$("[data-rng]").forEach(el => { const k = el.dataset.rng; el.innerHTML = fmtTri(k, c[k]); });
+  $$("[data-tri]").forEach(el => { if (document.activeElement !== el) el.value = c[el.dataset.tri][+el.dataset.i]; });
+  const tb = $("#todayBox");
+  if (tb){
+    const h = c.runs_per_month.map((r,i)=> r * c.minutes_before[i] / 60);
+    const L = loadedRateJS(c);
+    tb.innerHTML = `So this task takes about <b>${num(h[1],0)} hours a month</b> today, somewhere between ${num(h[0],0)} and ${num(h[2],0)}. That is about ${num(h[1]*12/52,1)} hours a week, or roughly ${money(h[1]*12*L)} a year at a loaded cost of ${money(L)} an hour.<br><span class="note">Does that sound right to you?</span>`;
+  }
+  const rb = $("#rateBox");
+  if (rb){ const L = loadedRateJS(c); rb.innerHTML = `Loaded cost: <b>${money(L,{cents:true})} an hour</b>. ${c.loaded_rate_override>0?"Your own figure.":`${money(c.salary)} salary plus ${c.burden_pct}% employer costs, over ${num(c.paid_hours,0)} working hours a year.`}`; }
+  const ab = $("#afterBox");
+  if (ab){
+    const saved = [Math.max(0,c.minutes_before[0]-c.minutes_after[2]), Math.max(0,c.minutes_before[1]-c.minutes_after[1]), Math.max(0,c.minutes_before[2]-c.minutes_after[0])];
+    ab.innerHTML = `That saves about <b>${dur(saved[1])} per run</b> (between ${dur(saved[0])} and ${dur(saved[2])}). Next, the results.`;
+  }
+  renderLive();
+}
+function renderLive(){
+  const R = S.result, box = $("#liveVals"); if (!box) return;
+  if (!R){ box.innerHTML = `<span class="note">Calculating…</span>`; return; }
+  const q = R.quoted.conservative, cs = R.cases.conservative;
+  box.innerHTML = `<span><span class="k">Conservative payback</span><span class="v ${q.payback===null?"neg":""}">${months(q.payback)}</span></span>
+    <span><span class="k">Year-one net</span><span class="v ${q.net<0?"neg":""}">${money(q.net,{compact:true})}</span></span>
+    <span><span class="k">Hours freed</span><span class="v">${num(cs.hours_per_week_steady,1)} a week</span></span>`;
+}
+
+/* ---------- pricing and setup (internal) ---------- */
+function renderSetup(){
+  const c = cand(); ensureUI(c);
+  const ps = S.schema.model_presets;
+  const tOpts = Object.fromEntries(Object.entries(TOKEN_PRESETS).map(([a,b])=>[a,b.l])); tOpts.custom = "Custom (set ranges)";
+  $("#setupInputs").innerHTML = `
+   <div class="card"><h3>Price</h3>
+    ${qNumber("audit_fee","Audit fee","Paid first.","$",50)}
+    ${qWrap("audit_credited","Credit the audit fee toward the build?","", `<div class="ctl">${sel('data-bind="audit_credited" data-bool="1"', {"true":"Yes","false":"No"}, String(!!c.audit_credited))}</div>`)}
+    ${qNumber("build_fee","Build fee","Fixed fee for the one-bottleneck build.","$",250)}
+    ${qWrap("upfront_pct","Payment terms","", `<div class="ctl">${sel('data-bind="upfront_pct"', {"50":"Half up front, half on delivery","100":"All up front","30":"30% up front, 70% on delivery","0":"All on delivery"}, String(c.upfront_pct))}</div>`)}
+    ${qNumber("care_plan_month","Care plan","Monitoring, fixes, small improvements.","$ a month",50)}
+   </div>
+   <div class="card"><h3>Running costs</h3>
+    ${qWrap("model_preset","AI model for the judgment step",`List prices in USD per million tokens, checked ${esc(S.schema.prices_verified_on)}. Prices change; re-check before quoting.`,
+       `<div class="ctl">${sel('data-bind="model_preset" data-preset="1"', Object.fromEntries(ps.map(p=>[p.id, p.label + (p.in!==null?` · $${p.in} in / $${p.out} out`:"")])), c.model_preset, "wide")}</div>`)}
+    ${qWrap("tokens","How much text goes through the model per run?","", `<div class="ctl">${sel('data-ui="tokens" data-part="preset"', tOpts, c.ui.tokens.preset, "wide")}</div>
+       <div class="rng"><span class="tag">Tokens per run</span><span id="tokRange"></span><button class="linkbtn" data-adjust="tokens_in">adjust input</button><button class="linkbtn" data-adjust="tokens_out">adjust output</button></div>${triInputs("tokens_in")}${triInputs("tokens_out")}`)}
+    ${qNumber("price_in_usd","Input price","","USD per million",0.05)}
+    ${qNumber("price_out_usd","Output price","","USD per million",0.05)}
+    ${qNumber("fx_usd_cad","USD to CAD","Model prices are in USD.","CAD per USD",0.01)}
+    ${qNumber("subscriptions_month","Other tools and subscriptions","","$ a month",10)}
+    <div class="calloutbox" id="tokBox"></div>
+   </div>
+   <div class="card"><h3>Model settings</h3>
+    ${qPlainSelect("quote_basis","What to put in the headline","Cash only is the honest default.", S.schema.choices.quote_basis.options)}
+    ${qNumber("discount_rate_pct","Discount rate for the 3-year NPV","Forrester TEI uses 10%.","% a year",1)}
+    ${qNumber("paid_hours","Working hours a year","52 weeks of 40 hours, less vacation and stat holidays.","hours",10)}
+   </div>`;
+  bindInputs($("#setupInputs"));
+  $$('#setupInputs [data-bool]').forEach(el => { el.removeEventListener("change", onBind); el.addEventListener("change", e => { cand().audit_credited = e.target.value === "true"; changed(false); }); });
+  $$('#setupInputs [data-preset]').forEach(el => el.addEventListener("change", e => {
+    const p = S.schema.model_presets.find(x => x.id === e.target.value); const c = cand();
+    if (p && p.in !== null){ c.price_in_usd = p.in; c.price_out_usd = p.out; }
+    if (p && p.id === "none"){ c.ui.tokens.preset = "none"; }
+    applyUI(c); renderSetup(); markDirty(true);
+  }));
+  $$('#setupInputs [data-bind="price_in_usd"], #setupInputs [data-bind="price_out_usd"]').forEach(el => el.addEventListener("input", () => { cand().model_preset = "custom"; }));
+  $$('#setupInputs [data-tri="tokens_in"], #setupInputs [data-tri="tokens_out"]').forEach(el => el.addEventListener("input", () => { cand().ui.tokens.preset = "custom"; const s = $('[data-ui="tokens"]'); if (s) s.value = "custom"; }));
+  refreshSetup();
+}
+function refreshSetup(){
+  const c = cand(), R = S.result; if (!$("#tokRange")) return;
+  $("#tokRange").innerHTML = `in <b>${c.tokens_in[1].toLocaleString()}</b> (${c.tokens_in[0].toLocaleString()} to ${c.tokens_in[2].toLocaleString()}), out <b>${c.tokens_out[1].toLocaleString()}</b> (${c.tokens_out[0].toLocaleString()} to ${c.tokens_out[2].toLocaleString()})`;
+  if (R) $("#tokBox").innerHTML = `Model cost per run, expected: <b>${money(R.cases.expected.token_cost_per_run,{cents:true})}</b>. Year-one running cost, expected: <b>${money(R.cases.expected.y1_running)}</b>.`;
+  $("#setupPricing").innerHTML = R ? `<div class="card"><h3>Pricing guidance <span class="internal-tag">internal</span></h3>${pricingBlock(R)}</div>` : "";
+}
+
+/* ---------- results ---------- */
+function renderResults(){
+  const R = S.result; if (!R) return;
+  const c = R.candidate, k = S.kase, q = R.quoted, cs = R.cases;
+  const basisCash = c.quote_basis === "cash";
+  const other = CASES.filter(x => x !== k);
+  const sub = (fn) => other.map(x => `${CASE_LABEL[x]} ${fn(x)}`).join(" · ");
+  const capacity = c.pathway === "capacity";
+  const kpi = (lab, val, subtxt, neg) => `<div class="kpi ${neg?"neg":""}"><div class="lab">${lab}</div><div class="val">${val}</div><div class="sub">${subtxt}</div></div>`;
+  const kp = [
+    kpi("Payback", months(q[k].payback), sub(x=>months(q[x].payback)), q[k].payback===null),
+    kpi(`Year-one net${basisCash?", cash":""}`, money(q[k].net,{compact:true}), sub(x=>money(q[x].net,{compact:true})), q[k].net<0),
+    kpi("Hours freed a week", num(cs[k].hours_per_week_steady,1), sub(x=>num(cs[x].hours_per_week_steady,1)), false),
+    capacity
+      ? kpi("Cost per freed hour, 3 yr", money(cs[k].cost_per_hour_freed_3yr), `Loaded cost ${money(R.loaded_rate)} per hour`, false)
+      : kpi("Year-one cost", money(cs[k].y1_cost,{compact:true}), sub(x=>money(cs[x].y1_cost,{compact:true})), false),
+  ].join("");
+  const flags = R.flags.map(f => `<div class="flag ${f.level} ${f.audience==="internal"?"internal":""}"><span class="ic" aria-hidden="true">${{critical:"!",serious:"!",warning:"!",info:"i"}[f.level]}</span><div><span class="lv">${f.level}</span>${esc(f.text)}</div></div>`).join("");
+  const warn = (R.input_warnings||[]).map(w => `<div class="flag warning"><span class="ic">!</span><div><span class="lv">input</span>${esc(w)}</div></div>`).join("");
+  $("#viewResults").innerHTML = `<div class="rgrid">
+  <div class="card span2">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px">
+      <h3 style="margin:0">${esc(c.name)} · ${CASE_LABEL[k]} case <span class="casepill">${basisCash?"cash basis":"cash plus capacity"}</span>${k!=="conservative"?' <span class="casepill">quote the conservative case</span>':""}</h3>
+      <div class="seg noprint" role="tablist" aria-label="Case shown">${CASES.map(x=>`<button data-case="${x}" class="${x===k?"on":""}">${CASE_LABEL[x]}</button>`).join("")}</div>
+    </div>
+    <div class="kpis">${kp}</div>
+  </div>
+  <div class="card span2">
+    <div class="say-head"><h3 style="margin:0">In plain words</h3><button class="btn small noprint" id="copySay">Copy</button></div>
+    <div class="say">${esc(R.call_sentence)}</div>
+  </div>
+  <div class="card"><h3>Cumulative net ${basisCash?"cash":"value"} from signing</h3>
+    <div class="legend">${CASES.map(x=>`<span><i style="background:${CASE_COLOR[x]}"></i>${CASE_LABEL[x]}</span>`).join("")}<span><i style="background:var(--muted);height:1px"></i>6 months</span></div>
+    <div class="chart" id="cumChart"></div>
+  </div>
+  <div class="card"><h3>Three cases</h3>${casesTable(R)}</div>
+  ${(flags||warn)?`<div class="card span2"><h3>Checks</h3><div class="flags">${warn}${flags}</div></div>`:""}
+  ${R.monte_carlo?`<div class="card"><h3>How likely is it? <span class="casepill">${R.monte_carlo.n.toLocaleString()} simulated outcomes</span></h3>${mcBlock(R)}</div>`:""}
+  ${R.tornado.length?`<div class="card"><h3>What to measure first</h3>
+    <div class="note" style="margin-bottom:8px">Year-one net when each estimate moves from its low end to its high end, everything else at likely. The longest bar is the number to time first.</div>
+    <div class="legend"><span><i class="sq" style="background:var(--s1)"></i>Estimate at its low end</span><span><i class="sq" style="background:var(--s2)"></i>Estimate at its high end</span></div>
+    <div class="chart" id="torChart"></div></div>`:""}
+  <div class="card span2"><h3>Every assumption</h3>${assumptionsTable(R)}</div>
+  </div>`;
+  $("#copySay").onclick = () => copyText(R.call_sentence);
+  $$("#viewResults .seg button").forEach(b => b.onclick = () => { S.kase = b.dataset.case; renderResults(); });
+  drawCum(R); if (R.monte_carlo) drawHist(R); if (R.tornado.length) drawTornado(R);
+  renderPrintHead();
+}
+
+function casesTable(R){
+  const cs = R.cases, c = R.candidate;
+  const row = (lab, fn, cls="") => `<tr class="${cls}"><td>${lab}</td>${CASES.map(x=>`<td class="${x==="conservative"?"cons":""}">${fn(x)}</td>`).join("")}</tr>`;
+  return `<table class="t"><thead><tr><th></th>${CASES.map(x=>`<th class="${x==="conservative"?"cons":""}">${CASE_LABEL[x]}</th>`).join("")}</tr></thead><tbody>
+    ${row("Hours freed a week, steady state", x=>num(cs[x].hours_per_week_steady,1))}
+    ${row("Hours freed in year one", x=>num(cs[x].hours_year1,0))}
+    ${row("Year-one cash benefit", x=>money(cs[x].y1_hard_benefit))}
+    ${row("Year-one capacity value (not cash)", x=>money(cs[x].y1_soft_benefit))}
+    ${row("Year-one cost", x=>money(cs[x].y1_cost))}
+    ${row("One-time: audit, build, client setup", x=>money(cs[x].y1_one_time), "sub")}
+    ${row("Recurring: care, models, owner time", x=>money(cs[x].y1_recurring), "sub")}
+    ${c.billing_model==="time_and_materials"?row("Billed revenue at risk", x=>money(cs[x].y1_rev_risk), "sub"):""}
+    ${row("Year-one net, cash", x=>money(cs[x].y1_net_cash), c.quote_basis==="cash"?"strong":"")}
+    ${row("Year-one net, incl. capacity", x=>money(cs[x].y1_net_all), c.quote_basis!=="cash"?"strong":"")}
+    ${row("Year-one ROI, cash", x=>cs[x].y1_roi_cash_pct===null?"n/a":Math.round(cs[x].y1_roi_cash_pct)+"%")}
+    ${row("Payback, cash", x=>months(cs[x].payback_cash_months))}
+    ${row("Payback, incl. capacity", x=>months(cs[x].payback_all_months))}
+    ${row("3-year NPV, cash", x=>money(cs[x].npv3_cash))}
+    ${row("Cost per freed hour, 3 years", x=>money(cs[x].cost_per_hour_freed_3yr,{cents:true}))}
+  </tbody></table>`;
+}
+
+function mcBlock(R){
+  const m = R.monte_carlo;
+  return `<div class="mcstats">
+    <div><div class="v">${pct(m.p_net_positive)}</div><div class="l">chance year one is net positive</div></div>
+    <div><div class="v">${pct(m.p_payback_6)}</div><div class="l">chance of payback within 6 months</div></div>
+    <div><div class="v">${money(m.net_p50,{compact:true})}</div><div class="l">median year-one net</div></div>
+    <div><div class="v">${money(m.net_p10,{compact:true})} to ${money(m.net_p90,{compact:true})}</div><div class="l">80% of outcomes fall here</div></div>
+  </div>
+  <div class="chart" id="histChart"></div>
+  <div class="note" style="margin-top:6px">Each estimate drawn from a PERT distribution between its low and high, centred on likely; estimates assumed independent. The conservative case is lower than ${pct(1-m.conservative_percentile)} of simulated outcomes${m.conservative_percentile<0.05?", so it is a deliberate floor, not a forecast":""}. Real estimates tend to move together, so treat the spread as a minimum.</div>`;
+}
+
+function pricingBlock(R){
+  const p = R.pricing, c = R.candidate;
+  const vol = p.volume_for_6mo;
+  const volTxt = !vol ? "No plausible volume" : vol.already_passes ? "Already passes" : `${vol.multiplier.toFixed(1)}x today's volume (${num(vol.hours_per_week_conservative,1)} h/wk conservative)`;
+  return `<div class="pricegrid">
+    <div><div class="v">${money(p.fee_low)} to ${money(p.fee_high)}</div><div class="l">Build fee at one third of first-90-day value (conservative to expected, ${esc(p.basis_note)})</div></div>
+    <div><div class="v">${p.max_fee_6mo===null?"None":money(p.max_fee_6mo)}</div><div class="l">Highest build fee that still passes 6-month conservative payback</div></div>
+    <div><div class="v">${money(c.build_fee)}</div><div class="l">Build fee entered</div></div>
+    <div><div class="v">${volTxt}</div><div class="l">Volume needed at this fee to pass the 6-month rule</div></div>
+    <div><div class="v">${money(p.care_low)} to ${money(p.care_high)}</div><div class="l">Care plan per month at 15 to 25% of build fee</div></div>
+    <div><div class="v">${money(c.build_fee*c.upfront_pct/100)} + ${money(c.build_fee*(1-c.upfront_pct/100))}</div><div class="l">Payment split: up front + at delivery</div></div>
+  </div>
+  ${p.notes.length?`<div class="flags" style="margin-top:10px">${p.notes.map(n=>`<div class="flag warning"><span class="ic">!</span><div>${esc(n)}</div></div>`).join("")}</div>`:""}
+  <div class="note" style="margin-top:8px">Heuristics from the project rules, to be replaced by your own data. For a pilot, show the discount on the invoice so the real price stays visible.</div>`;
+}
+
+function assumptionsTable(R){
+  const tr = S.schema.triples, cv = R.case_values;
+  const fmt = (k,v) => { const u = tr[k].unit; if (u==="%") return Math.round(v)+"%"; if (u==="CAD"||u==="CAD/mo") return money(v); if (u==="tokens") return Math.round(v).toLocaleString(); return num(v, v%1?1:0); };
+  const rows = Object.keys(tr).map(k => `<tr><td>${esc(tr[k].label)} <span class="unit">(${esc(tr[k].unit)})</span></td>${CASES.map(x=>`<td class="${x==="conservative"?"cons":""}">${fmt(k,cv[x][k])}</td>`).join("")}</tr>`).join("");
+  const c = R.candidate, ch = S.schema.choices;
+  return `<details><summary class="note" style="cursor:pointer">Show every assumption</summary>
+    <table class="t" style="margin-top:8px"><thead><tr><th></th>${CASES.map(x=>`<th class="${x==="conservative"?"cons":""}">${CASE_LABEL[x]}</th>`).join("")}</tr></thead><tbody>${rows}</tbody></table>
+    <div class="note" style="margin-top:8px">Loaded cost ${money(R.loaded_rate,{cents:true})}/h · ${esc(ch.pathway.options[c.pathway])} · ${esc(ch.billing_model.options[c.billing_model])} · Errors: ${esc(ch.error_type.options[c.error_type])} · Build ${money(c.build_fee)}, audit ${money(c.audit_fee)}${c.audit_credited?" (credited)":""}, care ${money(c.care_plan_month)}/mo · Model $${c.price_in_usd}/$${c.price_out_usd} per M tokens at ${c.fx_usd_cad} CAD/USD · Baseline ${c.baseline_measured?"measured":"estimated"}.</div>
+  </details>`;
+}
+
+/* ---------- charts (plain SVG) ---------- */
+function niceTicks(lo, hi, n=5){
+  if (hi === lo){ hi = lo + 1; }
+  const span = hi - lo, step0 = span / n, mag = Math.pow(10, Math.floor(Math.log10(step0)));
+  const step = [1,2,2.5,5,10].map(m=>m*mag).find(s => span/s <= n) || 10*mag;
+  const t0 = Math.floor(lo/step)*step, t1 = Math.ceil(hi/step)*step; const out = [];
+  for (let v=t0; v<=t1+1e-9; v+=step) out.push(+v.toFixed(10));
+  return out;
+}
+function tipAt(box, html, x, y){
+  let tip = box.querySelector(".tip"); if (!tip){ tip = document.createElement("div"); tip.className = "tip"; box.appendChild(tip); }
+  tip.innerHTML = html; tip.style.display = "block";
+  const bw = box.clientWidth, tw = tip.offsetWidth;
+  tip.style.left = Math.min(bw - tw - 4, Math.max(4, x + 14)) + "px"; tip.style.top = Math.max(0, y - 10) + "px";
+}
+function tipHide(box){ const t = box.querySelector(".tip"); if (t) t.style.display = "none"; }
+
+function drawCum(R){
+  const box = $("#cumChart"); const W = 640, H = 270, m = {l:58, r:92, t:10, b:30};
+  const key = R.candidate.quote_basis === "cash" ? "cum_cash" : "cum_all";
+  const ser = CASES.map(x => [0, ...R.cases[x].series[key]]);
+  const all = ser.flat(); let lo = Math.min(0, ...all), hi = Math.max(0, ...all);
+  const ticks = niceTicks(lo, hi, 5); lo = ticks[0]; hi = ticks[ticks.length-1];
+  const X = t => m.l + t/36*(W-m.l-m.r), Y = v => m.t + (hi - v)/(hi - lo)*(H-m.t-m.b);
+  let g = "";
+  ticks.forEach(v => { g += `<line x1="${m.l}" x2="${W-m.r}" y1="${Y(v)}" y2="${Y(v)}" stroke="var(--grid)" stroke-width="1"/>
+     <text x="${m.l-8}" y="${Y(v)+4}" text-anchor="end" font-size="11" fill="var(--muted)">${money(v,{compact:true})}</text>`; });
+  g += `<line x1="${m.l}" x2="${W-m.r}" y1="${Y(0)}" y2="${Y(0)}" stroke="var(--axis)" stroke-width="1.5"/>`;
+  [0,6,12,18,24,30,36].forEach(t => g += `<text x="${X(t)}" y="${H-m.b+18}" text-anchor="middle" font-size="11" fill="var(--muted)">${t}</text>`);
+  g += `<text x="${W-m.r}" y="${H-2}" text-anchor="end" font-size="11" fill="var(--muted)">months from signing</text>`;
+  g += `<line x1="${X(6)}" x2="${X(6)}" y1="${m.t}" y2="${H-m.b}" stroke="var(--muted)" stroke-dasharray="3 4" stroke-width="1"/>`;
+  g += `<line x1="${X(12)}" x2="${X(12)}" y1="${m.t}" y2="${H-m.b}" stroke="var(--grid)" stroke-width="1"/>`;
+  const order = [2,1,0];
+  order.forEach(i => { const s = ser[i]; const d = s.map((v,t)=>`${t?"L":"M"}${X(t).toFixed(1)},${Y(v).toFixed(1)}`).join("");
+    g += `<path d="${d}" fill="none" stroke="${CASE_COLOR[CASES[i]]}" stroke-width="${i===0?2.5:2}" stroke-linejoin="round" stroke-linecap="round"/>`; });
+  // direct labels at line ends with simple collision avoidance
+  const ends = ser.map((s,i)=>({i, y:Y(s[36]), v:s[36]})).sort((a,b)=>a.y-b.y);
+  for (let j=1;j<ends.length;j++) if (ends[j].y - ends[j-1].y < 26) ends[j].y = ends[j-1].y + 26;
+  ends.forEach(e => { g += `<text x="${W-m.r+8}" y="${e.y-1}" font-size="11.5" fill="var(--ink)">${CASE_LABEL[CASES[e.i]]}</text>
+     <text x="${W-m.r+8}" y="${e.y+12}" font-size="11" fill="var(--ink-2)">${money(e.v,{compact:true})}</text>`; });
+  g += `<g id="cumHover" style="display:none"><line id="cumX" y1="${m.t}" y2="${H-m.b}" stroke="var(--ink-2)" stroke-width="1"/>
+     ${CASES.map((x,i)=>`<circle id="cumD${i}" r="4.5" fill="${CASE_COLOR[x]}" stroke="var(--card)" stroke-width="2"/>`).join("")}</g>`;
+  g += `<rect id="cumHit" x="${m.l}" y="${m.t}" width="${W-m.l-m.r}" height="${H-m.t-m.b}" fill="transparent"/>`;
+  box.innerHTML = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Cumulative net over 36 months for three cases">${g}</svg>`;
+  const svg = box.querySelector("svg"), hit = $("#cumHit", box);
+  hit.addEventListener("mousemove", ev => {
+    const pt = svg.createSVGPoint(); pt.x = ev.clientX; pt.y = ev.clientY; const p = pt.matrixTransform(svg.getScreenCTM().inverse());
+    const t = Math.max(0, Math.min(36, Math.round((p.x - m.l)/(W-m.l-m.r)*36)));
+    $("#cumHover", box).style.display = ""; const x = X(t); $("#cumX", box).setAttribute("x1", x); $("#cumX", box).setAttribute("x2", x);
+    ser.forEach((s,i)=>{ const d = $("#cumD"+i, box); d.setAttribute("cx", x); d.setAttribute("cy", Y(s[t])); });
+    const r = box.getBoundingClientRect();
+    tipAt(box, `<b>Month ${t}</b><br>${CASES.map((c,i)=>`<span class="sw" style="background:${CASE_COLOR[c]}"></span>${CASE_LABEL[c]} ${money(ser[i][t])}`).join("<br>")}`, ev.clientX - r.left, ev.clientY - r.top);
+  });
+  hit.addEventListener("mouseleave", () => { $("#cumHover", box).style.display = "none"; tipHide(box); });
+}
+
+function drawHist(R){
+  const box = $("#histChart"); const h = R.monte_carlo.hist; const W = 640, H = 180, m = {l:14, r:14, t:24, b:28};
+  const lo = h[0].x0, hi = h[h.length-1].x1, maxC = Math.max(...h.map(b=>b.count)); const n = R.monte_carlo.n;
+  const X = v => m.l + (v - lo)/(hi - lo)*(W-m.l-m.r), Yh = c => (c/maxC)*(H-m.t-m.b);
+  let g = `<line x1="${m.l}" x2="${W-m.r}" y1="${H-m.b}" y2="${H-m.b}" stroke="var(--axis)"/>`;
+  h.forEach((b,i) => { const x = X(b.x0)+1, w = Math.max(1, X(b.x1)-X(b.x0)-2), hh = Yh(b.count);
+    if (hh > 0) g += `<path d="M${x},${H-m.b} v${-Math.max(0,hh-3)} q0,-3 3,-3 h${Math.max(0,w-6)} q3,0 3,3 v${Math.max(0,hh-3)} z" fill="var(--seq)" opacity="${b.x1<=0?0.55:1}"/>`;
+    g += `<rect class="hb" data-i="${i}" x="${X(b.x0)}" y="${m.t}" width="${X(b.x1)-X(b.x0)}" height="${H-m.t-m.b}" fill="transparent"/>`; });
+  const mark = (v, label, dy) => { if (v < lo || v > hi) return ""; const x = X(v);
+    return `<line x1="${x}" x2="${x}" y1="${m.t-6}" y2="${H-m.b}" stroke="var(--ink-2)" stroke-dasharray="3 3"/><text x="${x+4}" y="${m.t-10+dy}" font-size="11" fill="var(--ink-2)">${label}</text>`; };
+  g += mark(0, "$0", 0);
+  const cv = R.quoted.conservative.net;
+  if (cv >= lo && cv <= hi) g += mark(cv, "Conservative case", 12);
+
+  [lo, (lo+hi)/2, hi].forEach((v,i)=> g += `<text x="${X(v)}" y="${H-8}" text-anchor="${["start","middle","end"][i]}" font-size="11" fill="var(--muted)">${money(v,{compact:true})}</text>`);
+  const offNote = cv < lo ? `<div class="note" style="margin-bottom:2px">← Conservative case (${money(cv,{compact:true})}) is below every simulated outcome, off the left edge.</div>` : "";
+  box.innerHTML = offNote + `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Distribution of simulated year-one net">${g}</svg>`;
+  $$(".hb", box).forEach(el => { el.addEventListener("mousemove", ev => { const b = h[+el.dataset.i]; const r = box.getBoundingClientRect();
+    tipAt(box, `<b>${money(b.x0,{compact:true})} to ${money(b.x1,{compact:true})}</b><br>${(b.count/n*100).toFixed(1)}% of outcomes`, ev.clientX-r.left, ev.clientY-r.top); });
+    el.addEventListener("mouseleave", () => tipHide(box)); });
+}
+
+function drawTornado(R){
+  const box = $("#torChart"); const rows = R.tornado; const rowH = 30, W = 680, m = {l:270, r:70, t:8, b:24};
+  const H = m.t + m.b + rows.length*rowH; const base = rows[0].base;
+  let lo = Math.min(base, ...rows.map(r=>Math.min(r.net_at_low, r.net_at_high))), hi = Math.max(base, ...rows.map(r=>Math.max(r.net_at_low, r.net_at_high)));
+  const pad = (hi-lo)*0.04 || 1; lo -= pad; hi += pad;
+  const X = v => m.l + (v-lo)/(hi-lo)*(W-m.l-m.r);
+  let g = `<line x1="${X(base)}" x2="${X(base)}" y1="${m.t-4}" y2="${H-m.b+4}" stroke="var(--ink-2)" stroke-width="1.5"/>
+           <text x="${X(base)}" y="${H-6}" text-anchor="middle" font-size="11" fill="var(--muted)">Expected ${money(base,{compact:true})}</text>`;
+  const fmtIn = (r,v) => r.unit==="%" ? Math.round(v)+"%" : (r.unit.startsWith("CAD") ? money(v) : num(v, v%1?1:0) + " " + r.unit);
+  rows.forEach((r,i) => {
+    const y = m.t + i*rowH + 6, h = rowH - 12;
+    const seg = (v, col) => { const x0 = Math.min(X(base), X(v)), w = Math.abs(X(v)-X(base)); if (w < 0.5) return "";
+      const left = X(v) < X(base);
+      return left ? `<path d="M${x0+w-1},${y} h${-(w-1-4)} q-4,0 -4,4 v${h-8} q0,4 4,4 h${w-1-4} z" fill="${col}"/>`
+                  : `<path d="M${x0+1},${y} h${w-1-4} q4,0 4,4 v${h-8} q0,4 -4,4 h${-(w-1-4)} z" fill="${col}"/>`; };
+    g += seg(r.net_at_low, "var(--s1)") + seg(r.net_at_high, "var(--s2)");
+    const label = r.label.length > 44 ? r.label.slice(0,42) + "…" : r.label;
+    g += `<text x="${m.l-10}" y="${y+h/2+4}" text-anchor="end" font-size="12" fill="var(--ink-2)">${esc(label)}</text>`;
+    g += `<text x="${Math.max(X(r.net_at_low),X(r.net_at_high))+6}" y="${y+h/2+4}" font-size="11" fill="var(--muted)">±${money(r.swing/2,{compact:true})}</text>`;
+    g += `<rect class="tb" data-i="${i}" x="0" y="${m.t+i*rowH}" width="${W}" height="${rowH}" fill="transparent"/>`;
+  });
+  box.innerHTML = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Sensitivity of year-one net to each estimate">${g}</svg>`;
+  $$(".tb", box).forEach(el => { el.addEventListener("mousemove", ev => { const r = rows[+el.dataset.i]; const b = box.getBoundingClientRect();
+    tipAt(box, `<b>${esc(r.label)}</b><br><span class="sw" style="background:var(--s1)"></span>Low ${fmtIn(r,r.low)}: ${money(r.net_at_low)}<br><span class="sw" style="background:var(--s2)"></span>High ${fmtIn(r,r.high)}: ${money(r.net_at_high)}`, ev.clientX-b.left, ev.clientY-b.top); });
+    el.addEventListener("mouseleave", () => tipHide(box)); });
+}
+
+/* ---------- compare ---------- */
+function renderCompare(){
+  const rows = S.compare || [];
+  if (!S.compare){ $("#viewCompare").innerHTML = `<div class="card empty">Calculating…</div>`; return; }
+  const ch = S.schema.choices;
+  $("#viewCompare").innerHTML = `<div class="card"><h3>Audit ranking: candidates by conservative payback</h3>
+    <div class="note" style="margin-bottom:10px">Rank by the conservative case. Recommend the top one as the first build; park the rest for the care plan or a later build.</div>
+    <table class="t"><thead><tr><th>Rank and candidate</th><th class="cons">Payback, conservative</th><th class="cons">Year-one net, conservative</th><th>Year-one net, expected</th><th>Hours a week, expected</th><th>Build fee</th><th>6-month rule</th><th>5-hour rule</th><th></th></tr></thead><tbody>
+    ${rows.map(r=>`<tr><td><b style="color:var(--ink)">${r.rank}.</b> ${esc(r.name)}<div class="note">${esc(ch.pathway.options[r.pathway])} · ${esc(ch.billing_model.options[r.billing_model])}</div></td>
+      <td class="cons">${months(r.payback_conservative)}</td><td class="cons">${money(r.net_conservative)}</td><td>${money(r.net_expected)}</td>
+      <td>${num(r.hours_week_expected,1)}</td><td>${money(r.build_fee)}</td>
+      <td><span class="badge ${r.passes_6_month_rule?"ok":"no"}">${r.passes_6_month_rule?"✓ passes":"✗ fails"}</span></td>
+      <td><span class="badge ${r.passes_5_hour_rule?"ok":"no"}">${r.passes_5_hour_rule?"✓ passes":"✗ fails"}</span></td>
+      <td><button class="btn small" data-open="${r.index}">Open</button></td></tr>`).join("")}
+    </tbody></table></div>`;
+  $$("[data-open]").forEach(b => b.onclick = () => selectTask(+b.dataset.open, "results"));
+}
+
+
+
+/* ---------- task bar and views ---------- */
+function renderTaskBar(){
+  const cs = S.scenario.candidates;
+  $("#taskSel").innerHTML = cs.map((c,i)=>`<option value="${i}" ${i===S.active?"selected":""}>${i+1}. ${esc(c.name||"Untitled")}</option>`).join("");
+  $("#delCand").disabled = cs.length < 2;
+  $("#cmpCount").textContent = cs.length;
+}
+function selectTask(i, view){
+  S.active = i; ensureUI(cand()); applyUI(cand()); S.result = null; renderTaskBar();
+  setView(view || S.view); calc();
+}
+function setView(v){
+  if (v === "setup" && document.body.classList.contains("client")) v = "questions";
+  S.view = v;
+  $$(".views button").forEach(b => b.classList.toggle("on", b.dataset.view === v));
+  ["questions","results","compare","setup"].forEach(x => $("#view" + x[0].toUpperCase() + x.slice(1)).style.display = x === v ? "" : "none");
+  if (v === "questions") renderQuestions();
+  if (v === "results") renderResults();
+  if (v === "compare") renderCompare();
+  if (v === "setup") renderSetup();
+  window.scrollTo({top:0});
+}
+$("#taskSel").onchange = e => selectTask(+e.target.value);
+function newTask(name){
+  const b = structuredClone(S.schema.blank); b.name = name || ""; b.task_owner = "";
+  b.ui = {runs_per_month:{v:12, per:"month", conf:"guess"}, minutes_before:{v:2, unit:"hours", conf:"guess"},
+    minutes_after:{v:25, unit:"minutes", conf:"guess"}, errors_per_month:{v:1, per:"month", conf:"guess"},
+    cost_per_error:{method:"rework", v:2, conf:"guess"}, other_value_month:{v:0, conf:"guess"},
+    convert_pct:{preset:"half"}, adoption_pct:{preset:"most"}, golive_weeks:{preset:"month"}, ramp_months:{preset:"normal"},
+    client_setup_hours:{preset:"typical"}, owner_hours_month:{preset:"mid"}, error_reduction_pct:{preset:"half"},
+    tokens:{preset:"typical"}, role:""};
+  applyUI(b); return b;
+}
+$("#addCand").onclick = () => { const b = newTask("Task " + (S.scenario.candidates.length+1)); S.scenario.candidates.push(b); S.step = 0; selectTask(S.scenario.candidates.length-1, "questions"); markDirty(false); };
+$("#dupCand").onclick = () => { const b = structuredClone(cand()); b.name = (b.name||"Task") + " (copy)"; S.scenario.candidates.splice(S.active+1,0,b); selectTask(S.active+1); markDirty(false); };
+$("#delCand").onclick = () => { const cs = S.scenario.candidates; if (cs.length<2) return; cs.splice(S.active,1); selectTask(Math.max(0,S.active-1)); markDirty(false); };
+$$(".views button").forEach(b => b.onclick = () => setView(b.dataset.view));
+$("#liveToggle").onchange = e => document.body.classList.toggle("nolive", !e.target.checked);
+
+/* ---------- calc ---------- */
+let calcTimer = null, saveTimer = null;
+function markDirty(recalc){
+  S.dirty = true; setStatus("Unsaved changes");
+  if (recalc){ clearTimeout(calcTimer); calcTimer = setTimeout(calc, 220); }
+  clearTimeout(saveTimer); saveTimer = setTimeout(autosave, 1500);
+}
+async function calc(){
+  const seq = ++S.calcSeq; $("#viewResults").classList.add("busy");
+  try{
+    applyUI(cand());
+    const r = await api("/api/calc", {scenario:S.scenario, active:S.active, mc_runs:3000});
+    if (seq !== S.calcSeq) return;
+    S.result = r.result; S.compare = r.compare;
+    renderLive();
+    if (S.view === "results") renderResults();
+    if (S.view === "compare") renderCompare();
+    if (S.view === "setup") refreshSetup();
+  }catch(err){ setStatus("Calculation error: " + err.message); }
+  finally{ if (seq === S.calcSeq) $("#viewResults").classList.remove("busy"); }
+}
+async function api(path, body){
+  const res = await fetch(path, body ? {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(body)} : {});
+  if (!res.ok){ let m = res.statusText; try{ m = (await res.json()).error || m; }catch(_){} throw new Error(m); }
+  return res.json();
+}
+async function autosave(){ try{ await api("/api/autosave", {scenario:S.scenario}); setStatus(S.file ? `Autosaved. Press Save to keep it as ${S.file}` : "Autosaved"); }catch(_){} }
+function setStatus(t){ $("#status").textContent = t; }
+
+/* ---------- scenarios, export, print ---------- */
+async function refreshList(selectFile){
+  const list = await api("/api/scenarios");
+  $("#scenList").innerHTML = list.map(s=>`<option value="${esc(s.file)}" ${s.file===selectFile?"selected":""}>${esc(s.file==="_autosave.json"?"Last session (autosave)":s.title)} · ${esc(s.file)}</option>`).join("");
+  return list;
+}
+async function openScenario(file){
+  const r = await api("/api/scenario?file=" + encodeURIComponent(file));
+  S.scenario = r.scenario; S.scenario.meta = S.scenario.meta || {};
+  S.scenario.candidates.forEach(c => { ensureUI(c); });
+  S.file = file === "_autosave.json" ? (S.scenario._file || null) : file;
+  $("#saveName").value = (S.file || "").replace(/\.json$/,"");
+  $("#clientName").value = S.scenario.meta.client || "";
+  S.step = 0; S.dirty = false;
+  selectTask(Math.min(S.scenario.active || 0, S.scenario.candidates.length - 1), "questions");
+  setStatus(file === "_autosave.json" ? "Restored last session" : "Opened " + file);
+}
+$("#clientName").addEventListener("input", e => { S.scenario.meta.client = e.target.value; markDirty(false); renderPrintHead(); });
+$("#btnOpen").onclick = () => openScenario($("#scenList").value);
+$("#btnNew").onclick = () => {
+  const b = newTask("");
+  S.scenario = {meta:{title:"New walkthrough", client:"", prepared_by:"Kassem Harb, Celestial Automation"}, active:0, candidates:[b]};
+  S.file = null; $("#saveName").value = ""; $("#clientName").value = ""; S.step = 0; selectTask(0, "questions"); markDirty(false); };
+$("#btnSave").onclick = async () => {
+  const name = $("#saveName").value.trim() || S.scenario.meta?.client || S.scenario.meta?.title || "scenario";
+  S.scenario.active = S.active; S.scenario.meta.title = S.scenario.meta.client ? `${S.scenario.meta.client}` : (S.scenario.meta.title || name);
+  const r = await api("/api/scenario", {file:name, scenario:S.scenario}); S.file = r.file; S.scenario._file = r.file;
+  $("#saveName").value = r.file.replace(/\.json$/,""); S.dirty = false; setStatus("Saved to scenarios/" + r.file); refreshList(r.file); };
+$("#btnExport").onclick = async () => {
+  const btn = $("#btnExport"); btn.disabled = true; btn.textContent = "Building…";
+  try{
+    applyUI(cand());
+    const res = await fetch("/api/export", {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({scenario:S.scenario, active:S.active})});
+    if (!res.ok){ let m = res.statusText; try{ m = (await res.json()).error; }catch(_){} throw new Error(m); }
+    const blob = await res.blob(); const fname = res.headers.get("X-Saved-To") || "roi.xlsx";
+    const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = fname; document.body.appendChild(a); a.click(); a.remove();
+    setStatus("Excel saved to exports/" + fname);
+  }catch(err){ setStatus("Export failed: " + err.message); }
+  finally{ btn.disabled = false; btn.textContent = "Export Excel"; }
+};
+let clientBeforePrint = false;
+window.addEventListener("beforeprint", () => { clientBeforePrint = document.body.classList.contains("client"); document.body.classList.add("client"); if (S.result) renderResults(); $$("#viewResults details").forEach(d => d.open = true); });
+window.addEventListener("afterprint", () => { if (!clientBeforePrint) document.body.classList.remove("client"); });
+$("#btnPrint").onclick = () => window.print();
+$("#clientView").onchange = e => { document.body.classList.toggle("client", e.target.checked); if (e.target.checked && S.view === "setup") setView("questions"); };
+function renderPrintHead(){
+  const m = S.scenario?.meta || {}, c = cand();
+  $("#printHead").innerHTML = `<div style="font-size:18px;font-weight:650">${esc(c?.name||"")}</div>
+    <div style="color:#555">${esc(m.client||"")}${m.client?" · ":""}Prepared by ${esc(m.prepared_by||"Celestial Automation")} · ${new Date().toISOString().slice(0,10)} · All figures CAD</div>`;
+}
+function copyText(t){
+  if (navigator.clipboard) navigator.clipboard.writeText(t).then(()=>setStatus("Copied")).catch(()=>fallbackCopy(t)); else fallbackCopy(t);
+}
+function fallbackCopy(t){ const ta = document.createElement("textarea"); ta.value = t; document.body.appendChild(ta); ta.select(); try{ document.execCommand("copy"); setStatus("Copied"); }catch(_){} ta.remove(); }
+window.addEventListener("beforeunload", () => { if (S.dirty) navigator.sendBeacon && navigator.sendBeacon("/api/autosave", new Blob([JSON.stringify({scenario:S.scenario})], {type:"application/json"})); });
+
+/* ---------- theme (same storage key as the website) ---------- */
+const MOON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>';
+const SUN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>';
+function paintThemeBtn(){ const d = document.documentElement.classList.contains("dark"); $("#themeBtn").innerHTML = d ? SUN : MOON; $("#themeBtn").setAttribute("aria-label", d ? "Switch to light mode" : "Switch to dark mode"); }
+$("#themeBtn").onclick = () => { const d = !document.documentElement.classList.contains("dark"); document.documentElement.classList.toggle("dark", d); try{ localStorage.setItem("theme", d ? "dark" : "light"); }catch(_){} paintThemeBtn(); if (S.view === "results") renderResults(); };
+paintThemeBtn();
+
+/* ---------- boot ---------- */
+(async function boot(){
+  S.schema = await api("/api/schema");
+  const list = await refreshList();
+  const start = list.find(s => s.file === "_autosave.json") || list.find(s => s.file === "illustrative_three_candidates.json") || list[0];
+  if (start){ await refreshList(start.file); await openScenario(start.file); }
+  else { $("#btnNew").click(); }
+})();
+
+</script>
+</body>
+</html>

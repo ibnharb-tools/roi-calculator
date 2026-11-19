@@ -1,0 +1,323 @@
+{
+  "meta": {
+    "title": "Illustrative audit: three candidates at a mid-size engineering consultancy",
+    "client": "Illustrative numbers for rehearsal, not client data",
+    "prepared_by": "Kassem Harb, Celestial Automation",
+    "notes": "Use this to practise the audit ranking and the time-and-materials conversation. Every number is made up for practice."
+  },
+  "active": 0,
+  "candidates": [
+    {
+      "name": "Monthly project progress report compile",
+      "task_owner": "Project engineer",
+      "notes": "Pulls hours, milestones and issues from the project tracker and spreadsheets into the client report template.",
+      "billing_model": "fixed_fee",
+      "pathway": "billable",
+      "error_type": "rework",
+      "quote_basis": "cash",
+      "baseline_measured": false,
+      "audit_credited": true,
+      "model_preset": "claude-sonnet-5-5",
+      "other_value_note": "",
+      "salary": 95000,
+      "burden_pct": 25,
+      "paid_hours": 1900,
+      "loaded_rate_override": 0,
+      "overtime_multiplier": 1.5,
+      "bill_rate": 160,
+      "billable_share_pct": 0,
+      "runs_per_month": [
+        6,
+        8,
+        10
+      ],
+      "minutes_before": [
+        180,
+        240,
+        360
+      ],
+      "minutes_after": [
+        30,
+        45,
+        60
+      ],
+      "adoption_pct": [
+        60,
+        80,
+        95
+      ],
+      "ramp_months": [
+        1,
+        2,
+        3
+      ],
+      "golive_weeks": [
+        4,
+        5,
+        7
+      ],
+      "convert_pct": [
+        25,
+        40,
+        60
+      ],
+      "errors_per_month": [
+        0.5,
+        1,
+        2
+      ],
+      "error_reduction_pct": [
+        40,
+        60,
+        80
+      ],
+      "cost_per_error": [
+        300,
+        600,
+        1200
+      ],
+      "other_value_month": [
+        0,
+        0,
+        0
+      ],
+      "tokens_in": [
+        60000,
+        80000,
+        120000
+      ],
+      "tokens_out": [
+        4000,
+        6000,
+        8000
+      ],
+      "client_setup_hours": [
+        8,
+        12,
+        20
+      ],
+      "owner_hours_month": [
+        1,
+        2,
+        3
+      ],
+      "audit_fee": 750,
+      "build_fee": 6500,
+      "upfront_pct": 50,
+      "care_plan_month": 300,
+      "subscriptions_month": 0,
+      "price_in_usd": 2.0,
+      "price_out_usd": 10.0,
+      "fx_usd_cad": 1.42,
+      "discount_rate_pct": 10
+    },
+    {
+      "name": "Drawing and document register update",
+      "task_owner": "Document controller",
+      "notes": "Billed hourly to the end client, so faster work cuts billed revenue. Practise leading with capacity and fewer errors.",
+      "billing_model": "time_and_materials",
+      "pathway": "capacity",
+      "error_type": "cash",
+      "quote_basis": "cash",
+      "baseline_measured": false,
+      "audit_credited": true,
+      "model_preset": "claude-haiku-5-5",
+      "other_value_note": "",
+      "salary": 68000,
+      "burden_pct": 25,
+      "paid_hours": 1900,
+      "loaded_rate_override": 0,
+      "overtime_multiplier": 1.5,
+      "bill_rate": 110,
+      "billable_share_pct": 60,
+      "runs_per_month": [
+        20,
+        30,
+        40
+      ],
+      "minutes_before": [
+        30,
+        45,
+        60
+      ],
+      "minutes_after": [
+        5,
+        8,
+        12
+      ],
+      "adoption_pct": [
+        60,
+        80,
+        95
+      ],
+      "ramp_months": [
+        1,
+        1,
+        2
+      ],
+      "golive_weeks": [
+        3,
+        4,
+        6
+      ],
+      "convert_pct": [
+        25,
+        50,
+        75
+      ],
+      "errors_per_month": [
+        1,
+        2,
+        4
+      ],
+      "error_reduction_pct": [
+        50,
+        70,
+        90
+      ],
+      "cost_per_error": [
+        150,
+        400,
+        900
+      ],
+      "other_value_month": [
+        0,
+        0,
+        0
+      ],
+      "tokens_in": [
+        15000,
+        25000,
+        40000
+      ],
+      "tokens_out": [
+        1000,
+        2000,
+        3000
+      ],
+      "client_setup_hours": [
+        6,
+        10,
+        16
+      ],
+      "owner_hours_month": [
+        1,
+        2,
+        3
+      ],
+      "audit_fee": 750,
+      "build_fee": 4500,
+      "upfront_pct": 50,
+      "care_plan_month": 200,
+      "subscriptions_month": 0,
+      "price_in_usd": 0.1,
+      "price_out_usd": 0.5,
+      "fx_usd_cad": 1.42,
+      "discount_rate_pct": 10
+    },
+    {
+      "name": "Supplier quote comparison for procurement",
+      "task_owner": "Procurement coordinator",
+      "notes": "Done after hours at month end, so time saved removes paid overtime. Care plan offered after the first 90 days.",
+      "billing_model": "internal",
+      "pathway": "overtime",
+      "error_type": "cash",
+      "quote_basis": "cash",
+      "baseline_measured": false,
+      "audit_credited": true,
+      "model_preset": "claude-sonnet-5-5",
+      "other_value_note": "",
+      "salary": 72000,
+      "burden_pct": 25,
+      "paid_hours": 1900,
+      "loaded_rate_override": 0,
+      "overtime_multiplier": 1.5,
+      "bill_rate": 150,
+      "billable_share_pct": 0,
+      "runs_per_month": [
+        20,
+        25,
+        30
+      ],
+      "minutes_before": [
+        150,
+        180,
+        240
+      ],
+      "minutes_after": [
+        20,
+        30,
+        40
+      ],
+      "adoption_pct": [
+        70,
+        85,
+        95
+      ],
+      "ramp_months": [
+        1,
+        1,
+        2
+      ],
+      "golive_weeks": [
+        3,
+        4,
+        6
+      ],
+      "convert_pct": [
+        50,
+        65,
+        80
+      ],
+      "errors_per_month": [
+        0,
+        0.5,
+        1
+      ],
+      "error_reduction_pct": [
+        50,
+        70,
+        90
+      ],
+      "cost_per_error": [
+        1000,
+        2500,
+        5000
+      ],
+      "other_value_month": [
+        0,
+        0,
+        0
+      ],
+      "tokens_in": [
+        40000,
+        60000,
+        90000
+      ],
+      "tokens_out": [
+        3000,
+        5000,
+        8000
+      ],
+      "client_setup_hours": [
+        6,
+        10,
+        16
+      ],
+      "owner_hours_month": [
+        1,
+        2,
+        3
+      ],
+      "audit_fee": 750,
+      "build_fee": 5000,
+      "upfront_pct": 50,
+      "care_plan_month": 0,
+      "subscriptions_month": 0,
+      "price_in_usd": 2.0,
+      "price_out_usd": 10.0,
+      "fx_usd_cad": 1.42,
+      "discount_rate_pct": 10
+    }
+  ]
+}
